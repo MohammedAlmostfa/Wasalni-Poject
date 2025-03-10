@@ -25,7 +25,7 @@ use App\Http\Controllers\Auth\VerificationController;
 
 // User login
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::post('/loginwithGoogel', [AuthController::class, 'loginwithGoogel']);
 // User registration
 Route::post('/register', [AuthController::class, 'register']);
 // User logout

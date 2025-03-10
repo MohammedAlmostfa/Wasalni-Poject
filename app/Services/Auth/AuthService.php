@@ -184,5 +184,61 @@ class AuthService
         }
     }
 
+    /**
+     * Login a user using Google OAuth.
+     *
+     * This method authenticates a user using Google OAuth.
+     * If successful, it returns a JWT token for further authenticated requests.
+     *
+     * @param string $googleToken Google access token.
+     * @return array Contains message, status, and authorization details.
+     */
+    public function loginwithgoogel($googleToken)
+    {
+        try {
+            // Get user info from Google API
+            $response = Http::get("https://www.googleapis.com/oauth2/v1/userinfo?access_token={$googleToken}");
 
+            // If the request fails
+            if ($response->failed()) {
+                return [
+                    'message' => 'Failed to fetch user info from Google',
+                    'status' => $response->status(),
+                ];
+            }
+
+            // Decode the response JSON
+            $userData = $response->json();
+
+            // Find or create the user
+            $user = User::firstOrCreate(
+                ['email' => $userData['email'],
+                    'password' => bcrypt('123456dummy'),
+                    'google_id' => $userData['id'],
+                ]
+            );
+
+            // Generate a JWT token for the user
+            $token = JWTAuth::fromUser($user);
+
+            // Return success response
+            return [
+                'message' => 'Logged in successfully',
+                'status' => 200,
+                'authorisation' => [
+                    'token' => $token, // Return the generated token
+                    'type' => 'bearer', // Token type
+                ],
+            ];
+        } catch (Exception $e) {
+            // Log the error
+            Log::error('Error in login with Google: ' . $e->getMessage());
+
+            // Return error response
+            return [
+                'message' => 'An error occurred while logging in with Google',
+                'status' => 500,
+            ];
+        }
+    }
 }
