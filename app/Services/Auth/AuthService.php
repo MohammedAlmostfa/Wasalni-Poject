@@ -2,80 +2,71 @@
 
 namespace App\Services\Auth;
 
-use App\Models\City;
 use Exception;
+use App\Models\City;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Profile;
+use App\Events\Registered;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class AuthService
 {
     /**
      * Register a new user.
      *
-     * @param array $data User data: email, password, first_name, last_name, gender, birthday, phone, address, country_id.
-     * @return array Contains message, token, and status.
+     * This method handles user registration. It stores user data temporarily in the cache
+     * and sends a verification code to the user's email.
+     *
+     * @param array $data User data: email, password, etc.
+     * @return array Contains message, status, and additional data.
      */
     public function register($data)
     {
         try {
-            // Create a new user
-            $user = User::create([
-                "email" => $data['email'],
-                "password" => bcrypt($data['password']), // Hash the password
-            ]);
+            // Generate a unique cache key for the user data
+            $userDataKey = 'user_data_' . $data['email'];
 
-            // Create a profile for the user
-            $profile = Profile::create([
-                'first_name' => $data['first_name'],
-                'last_name' => $data['last_name'],
-                'gender' => $data['gender'] ?? null, // Optional field
-                'birthday' => $data['birthday'] ?? null, // Optional field
-                'phone' => $data['phone'],
-                'address' => $data['address'],
-                'user_id' => $user->id, // Link profile to the user
-                'country_id' => $data['country_id']
-            ]);
-
-            // Find the country by ID
-            $country = Country::find($data['country_id']);
-
-            // Make API call to fetch cities for the selected country
-            $response = Http::post('https://countriesnow.space/api/v0.1/countries/cities', [
-                'country' => $country->country_name,
-            ]);
-
-            // If the API call is successful, save the cities to the database
-            if ($response->successful()) {
-                $cities = $response->json()['data']; // Extract cities from the response
-
-                // Create cities in the database
-                foreach ($cities as $cityName) {
-                    City::create([
-                        'city_name' => $cityName,
-                        'country_id' => $country->id,
-                    ]);
-                }
+            // Check if the user data is already cached
+            if (Cache::has($userDataKey)) {
+                return [
+                    'status' => 400,
+                    'message' => "You can't register now. Please verify your account or try after an hour.",
+                ];
             }
 
-            // Generate a JWT token for the user
-            $token = JWTAuth::fromUser($user);
+            // Store user data in cache for 1 hour
+            Cache::put($userDataKey, $data, 3600);
 
-            // Return success response with user data and token
+            // Generate a unique cache key for the verification code
+            $verifkey = 'verification_code_' . $data['email'];
+
+            // Check if the verification code already exists in the cache
+            if (Cache::has($verifkey)) {
+                return [
+                    'status' => 400,
+                    'message' => "You can't resend the code again, please try after an hour.",
+                ];
+            }
+
+            // Generate a random 6-digit code and store it in the cache
+            $code = Cache::remember($verifkey, 3600, function () {
+                return random_int(100000, 999999);
+            });
+
+            // Trigger the Registered event to send the verification email
+            event(new Registered($data, $verifkey));
+
+            // Return success response
             return [
-                'message' => 'User created successfully',
+                'message' => 'Verification code sent successfully',
                 'status' => 201, // HTTP status code for created
                 'data' => [
-                    'name' => $user->profile->first_name,
-                    'email' => $user->email,
-                    'authorisation' => [
-                        'token' => $token, // Return the generated token
-                        'type' => 'bearer', // Token type
-                    ]
+                    'email' => $data['email'],
                 ],
             ];
         } catch (Exception $e) {
@@ -91,13 +82,16 @@ class AuthService
     /**
      * Login a user.
      *
+     * This method authenticates a user using their email and password.
+     * If successful, it returns a JWT token for further authenticated requests.
+     *
      * @param array $credentials User credentials: email, password.
-     * @return array Contains message, status, data, and authorization.
+     * @return array Contains message, status, data, and authorization details.
      */
     public function login($credentials)
     {
         try {
-            // Attempt to authenticate the user
+            // Attempt to authenticate the user using JWT
             if (!$token = JWTAuth::attempt($credentials)) {
                 // If authentication fails
                 return [
@@ -113,8 +107,6 @@ class AuthService
                     'message' => 'Login successful',
                     'status' => 201, // HTTP status code for successful creation
                     'data' => [
-                        'name' => $user->profile->first_name,
-                        'email' => $user->email,
                         'authorisation' => [
                             'token' => $token, // Return the generated token
                             'type' => 'bearer', // Token type
@@ -136,6 +128,8 @@ class AuthService
 
     /**
      * Logout the authenticated user.
+     *
+     * This method logs out the currently authenticated user.
      *
      * @return array Contains message and status.
      */
@@ -161,7 +155,9 @@ class AuthService
     /**
      * Refresh the JWT token for the authenticated user.
      *
-     * @return array Contains message, status, user, and authorization.
+     * This method refreshes the JWT token for the authenticated user.
+     *
+     * @return array Contains message, status, user, and authorization details.
      */
     public function refresh()
     {
@@ -188,35 +184,5 @@ class AuthService
         }
     }
 
-    /**
-     * Get the authenticated user's data.
-     *
-     * @return array Contains message, status, and user data.
-     */
-    public function getme()
-    {
-        try {
-            // Get the authenticated user
-            $user = Auth::user();
 
-            // Return user data
-            return [
-                'message' => 'User data retrieved successfully',
-                'status' => 200, // HTTP status code for success
-                'data' => [
-                    'id' => $user->id,
-                    'name' => $user->profile->first_name . ' ' . $user->profile->last_name,
-                    'email' => $user->email,
-                ],
-            ];
-        } catch (Exception $e) {
-            // Log the error if fetching user data fails
-            Log::error('Error in getme: ' . $e->getMessage());
-            return [
-                'message' => 'An error occurred while fetching user data',
-                'data' => null,
-                'status' => 500, // HTTP status code for server error
-            ];
-        }
-    }
 }

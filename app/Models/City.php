@@ -28,4 +28,13 @@ class City extends Model
     {
         return $this->belongsTo(Country::class);
     }
+    public function tripsFrom()
+    {
+        return $this->hasMany(Trip::class, 'from');
+    }
+
+    public function tripsTo()
+    {
+        return $this->hasMany(Trip::class, 'to');
+    }
 }

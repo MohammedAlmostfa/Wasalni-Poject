@@ -13,10 +13,10 @@ return new class extends Migration {
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->string("description");
-            $table->timestamp('trip_start');
-            $table->string('from');
-            $table->string('to');
-            $table->enum('status', ['Pending', 'Ending', 'Complete']);
+            $table->dateTime('trip_start');
+            $table->foreignId('from')->constrained('cities')->cascadeOnDelete();
+            $table->foreignId('to')->constrained('cities')->cascadeOnDelete();
+            $table->enum('status', ['Pending', 'Ending', 'Complete'])->default('Pending');
             $table->integer('seat_price');
             $table->integer('available_seats')->unsigned();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

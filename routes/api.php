@@ -2,9 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\TripController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,11 +35,20 @@ Route::post('refresh', [AuthController::class, 'refresh']);
 // Protected routes (require authentication)
 Route::middleware('auth:api')->group(function () {
     // Get authenticated user details
-    Route::get('/me', [AuthController::class, 'getme']);
+    Route::get('/me', [ProfileController::class, 'getme']);
 
     // API resource routes for countries and cities
     // CRUD operations for countries
     Route::apiResource('countries', CountryController::class);
     // CRUD operations for cities
     Route::apiResource('cities', CityController::class);
+    // CRUD operations for trips
+    Route::apiResource('trip', TripController::class);
+    // CRUD operations for profile
+    Route::put('profile', [ProfileController::class,'update']);
+    Route::apiResource('profile', ProfileController::class);
+
+
+
 });
+Route::post('/verify-email/{id}', [VerificationController::class, 'verify']);

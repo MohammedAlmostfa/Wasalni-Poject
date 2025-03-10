@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Services\Auth\AuthService;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Http\Requests\StorProfileRequest;
 use App\Http\Requests\AuthRequest\LoginRequest;
 use App\Http\Requests\AuthRequest\RegisterRequest;
-use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -46,6 +48,7 @@ class AuthController extends Controller
             ? self::success($result['data'], $result['message'], $result['status'])
             : self::error(null, $result['message'], $result['status']);
     }
+
 
     /**
      * Login an existing user.
@@ -99,19 +102,5 @@ class AuthController extends Controller
             : self::error(null, $result['message'], $result['status']);
     }
 
-    /**
-     * Get the authenticated user's data.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getme()
-    {
-        // Call the AuthService to get the authenticated user's data
-        $result = $this->authService->getme();
 
-        // Return a success or error response based on the result
-        return $result['status'] === 200
-            ? self::success($result['data'], $result['message'], $result['status'])
-            : self::error(null, $result['message'], $result['status']);
-    }
 }
