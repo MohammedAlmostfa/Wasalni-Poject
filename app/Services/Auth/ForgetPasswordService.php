@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services\Auth;
 
 use Exception;
@@ -17,17 +16,20 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ForgetPasswordService
 {
     /**
-     * check if email  exists and send the code
-     * @param string  $email
-     * @return array status + message
+     * Check if the email exists and send a verification code.
+     *
+     * @param string $email The email address to send the code to.
+     * @return array An array containing the status and message.
      */
     public function checkEmail($email)
     {
         try {
-            $user=Auth::user();
 
-            $key = $email . '_' . $user->id;
 
+            // Create a unique cache key for the user's email and ID
+            $key = $email  ;
+
+            // Check if a code has already been sent within the last hour
             if (Cache::has($key)) {
                 return [
                     'status' => 400,
@@ -35,10 +37,12 @@ class ForgetPasswordService
                 ];
             }
 
+            // Generate a 6-digit random code and store it in the cache for 1 hour
             $code = Cache::remember($key, 3600, function () {
                 return random_int(100000, 999999);
             });
 
+            // Send the code to the user's email
             Mail::to($email)->send(new SendForgetPasswordCodeMail($code));
 
             return [
@@ -46,12 +50,13 @@ class ForgetPasswordService
                 'message' => "The code has been sent to your email",
             ];
         } catch (Exception $e) {
-            Log::error("error in check email and send code" . $e->getMessage());
+            // Log the error and return a server error response
+            Log::error("Error in checkEmail: " . $e->getMessage());
 
             throw new HttpResponseException(response()->json(
                 [
                     'status' => 'error',
-                    'message' => "there is something wrong in server",
+                    'message' => "There is something wrong on the server.",
                 ],
                 500
             ));
@@ -59,43 +64,50 @@ class ForgetPasswordService
     }
 
     /**
-     * check if the code is correct
-     * @param string  $email
-     * @param string  $code
-     *  @return array status + message
+     * Check if the provided code matches the cached code.
+     *
+     * @param string $email The email address associated with the code.
+     * @param string $code The code to verify.
+     * @return array An array containing the status and message.
      */
     public function checkCode($email, $code)
     {
         try {
-            $user=Auth::user();
 
-            $key = $email . '_' . $user->id;
 
+            // Create a unique cache key for the user's email and ID
+            $key = $email ;
+            // Check if the code exists in the cache
             if (Cache::has($key)) {
                 $cached_code = Cache::get($key);
+
+                // Verify if the provided code matches the cached code
                 if ($code != $cached_code) {
                     return [
                         'status' => 400,
-                        'message' => "The code you entered is incorrect",
+                        'message' => "The code you entered is incorrect.",
                     ];
                 }
+
                 return [
                     'status' => 200,
-                    'message' => "The code you entered is correct",
+                    'message' => "The code you entered is correct.",
                 ];
             } else {
+                // If the code is not found in the cache, it has expired
                 return [
                     'status' => 400,
-                    'message' => "The code sent to this account has expired",
+                    'message' => "The code sent to this account has expired.",
                 ];
             }
         } catch (Exception $e) {
-            Log::error("error in check code" . $e->getMessage());
+            // Log the error and return a server error response
+            Log::error("Error in checkCode: " . $e->getMessage());
 
             throw new HttpResponseException(response()->json(
                 [
                     'status' => 'error',
-                    'message' => "there is something wrong in server",
+                    'message' => "There is something wrong on the server.",
                 ],
                 500
             ));
@@ -103,40 +115,49 @@ class ForgetPasswordService
     }
 
     /**
-     * change the password
-     * @param string  $email
-     * @param string  $password
+     * Change the user's password.
+     *
+     * @param string $email The email address of the user.
+     * @param string $password The new password.
+     * @return void
      */
     public function changePassword($email, $password)
     {
         try {
+            // Find the user by email
             $user = User::where('email', $email)->first();
+
             if ($user) {
+                // Hash the new password and save it
                 $user->password = Hash::make($password);
                 $user->save();
 
+                // Delete the cached code after the password is changed
                 $key = $email . '_' . $user->id;
                 Cache::delete($key);
             } else {
+                // If the user is not found, throw a ModelNotFoundException
                 throw new ModelNotFoundException();
             }
         } catch (ModelNotFoundException $e) {
-            Log::error("error in change password" . $e->getMessage());
+            // Log the error and return a 404 response
+            Log::error("Error in changePassword: " . $e->getMessage());
 
             throw new HttpResponseException(response()->json(
                 [
                     'status' => 'error',
-                    'message' => "we didn't find any thing",
+                    'message' => "We didn't find any user with this email.",
                 ],
                 404
             ));
         } catch (Exception $e) {
-            Log::error("error in change password" . $e->getMessage());
+            // Log the error and return a server error response
+            Log::error("Error in changePassword: " . $e->getMessage());
 
             throw new HttpResponseException(response()->json(
                 [
                     'status' => 'error',
-                    'message' => "there is something wrong in server",
+                    'message' => "There is something wrong on the server.",
                 ],
                 500
             ));

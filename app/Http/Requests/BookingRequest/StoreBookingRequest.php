@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Requests\AuthRequest;
+namespace App\Http\Requests\BookingRequest;
 
+use App\Rules\SeatsAvailable;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class VerficationRequest extends FormRequest
+class StoreBookingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +25,14 @@ class VerficationRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'code' => 'required|numeric|digits:6',
-            'email' => 'required|email',
+            "trip_id" => "required|integer|exists:trips,id",
+            "seats_number" => [
+                "required",
+                "integer",
+                new SeatsAvailable($this->trip_id), // استخدم $this->trip_id
+            ],
         ];
     }
-
 
     /**
      * Handle a failed validation attempt.

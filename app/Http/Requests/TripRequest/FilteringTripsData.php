@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\AuthRequest;
+namespace App\Http\Requests\TripRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class VerficationRequest extends FormRequest
+class FilteringTripsData extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,16 @@ class VerficationRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'code' => 'required|numeric|digits:6',
-            'email' => 'required|email',
+
+            'trip_start' => 'nullable|date_format:Y-m-d H:i:s|after:now',
+            'from' => 'nullable|exists:cities,id',
+            'to' => 'nullable|exists:cities,id|different:from',
+        'status' => 'nullable|string',
+            'seat_price' => 'nullable|integer|min:0',
+            'available_seats' => 'nullable|integer|min:0',
+
         ];
     }
-
-
     /**
      * Handle a failed validation attempt.
      * This method is called when validation fails.

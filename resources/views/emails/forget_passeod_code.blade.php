@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email Address - Wasalni</title>
+    <title>Password Reset - Wasalni</title>
     <style>
         /* General Styles */
         body {
@@ -43,6 +43,9 @@
             font-weight: bold;
             text-align: center;
             margin: 20px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
             color: #007bff;
         }
 
@@ -52,29 +55,39 @@
             font-size: 14px;
             color: #888888;
         }
+
+        .note {
+            font-size: 14px;
+            color: #777777;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <!-- Heading -->
-        <h1>Verify Your Email Address</h1>
+        <h1>Password Reset Request</h1>
 
         <!-- Greeting -->
-        <p>Hello {{ $user['email'] }},</p>
-
-        <!-- Verification Code -->
-        <p>Your verification code is:</p>
-        <div class="code">{{ $code }}</div>
+        <p>Hello,</p>
 
         <!-- Instructions -->
-        <p>Please use this code to verify your email address and complete your registration on <strong>Wasalni</strong>.
-        </p>
+        <p>We received a request to reset your password for your <strong>Wasalni</strong> account. Please use the
+            following verification code to proceed:</p>
+
+        <!-- Verification Code -->
+        <div class="code">{{ $code }}</div>
+
+        <!-- Note -->
+        <p class="note"><strong>Note:</strong> This code is valid for 1 hour only. If you did not request a password
+            reset, please ignore this email.</p>
 
         <!-- Footer -->
         <div class="footer">
-            <p>If you did not create an account, no further action is required.</p>
-            <p>&copy; 2025 Wasalni.</p>
+            <p>If you have any questions, feel free to contact our support team.</p>
+            <p>&copy; 2023 Wasalni.</p>
         </div>
     </div>
 </body>

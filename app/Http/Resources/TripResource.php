@@ -1,10 +1,20 @@
 <?php
+
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TripResource extends JsonResource
 {
+    /**
+     * Transform the resource into an array.
+     *
+     * This method converts the Trip model into an array that can be returned as JSON.
+     *
+     * @param Request $request The incoming HTTP request.
+     * @return array<string, mixed> The transformed data.
+     */
     public function toArray($request)
     {
         return [

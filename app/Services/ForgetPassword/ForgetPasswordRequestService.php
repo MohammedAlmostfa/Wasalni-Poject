@@ -1,6 +1,6 @@
 <?php
 
-namespace App\service\ForgetPassword;
+namespace App\Services\ForgetPassword;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 

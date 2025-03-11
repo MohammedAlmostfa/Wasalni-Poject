@@ -11,15 +11,18 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
-class ProfileSevice
+class ProfileService
 {
     /**
      * Create a new profile for the authenticated user.
      *
      * @param array $data The profile data to be stored.
      * @return array An array containing the result of the operation.
+     *               - 'message': A message describing the result.
+     *               - 'data': The created or existing profile data.
+     *               - 'status': HTTP status code.
      */
-    public function creatAprofile($data)
+    public function createProfile($data)
     {
         try {
             $user = Auth::user();
@@ -76,9 +79,9 @@ class ProfileSevice
             }
         } catch (Exception $e) {
             // Log the error
-            Log::error('Error in add profile data: ' . $e->getMessage());
+            Log::error('Error in creating profile: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred during add profile data',
+                'message' => 'An error occurred while creating the profile',
                 'status' => 500,
                 'data' => null,
             ];
@@ -90,8 +93,11 @@ class ProfileSevice
      *
      * @param array $data The updated profile data.
      * @return array An array containing the result of the operation.
+     *               - 'message': A message describing the result.
+     *               - 'data': The updated profile data.
+     *               - 'status': HTTP status code.
      */
-    public function updateprfile($data)
+    public function updateProfile($data)
     {
         try {
             $user = Auth::user();
@@ -148,27 +154,28 @@ class ProfileSevice
             }
         } catch (Exception $e) {
             // Log the error
-            Log::error('Error in update profile data: ' . $e->getMessage());
+            Log::error('Error in updating profile: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred during update profile data',
+                'message' => 'An error occurred while updating the profile',
                 'status' => 500,
                 'data' => null,
             ];
         }
     }
+
     /**
      * Get the authenticated user's data.
      *
-     * This method retrieves the data of the currently authenticated user.
-     *
      * @return array Contains message, status, and user data.
+     *               - 'message': A message describing the result.
+     *               - 'data': The user's profile data.
+     *               - 'status': HTTP status code.
      */
-    public function getme()
+    public function getMe()
     {
         try {
             // Get the authenticated user
-
-            $user =Auth::user();
+            $user = Auth::user();
 
             // Return user data
             return [
@@ -182,12 +189,11 @@ class ProfileSevice
                     'birthday' => $user->profile->birthday,
                     'phone' => $user->profile->phone,
                     'address' => $user->profile->address,
-
                 ],
             ];
         } catch (Exception $e) {
             // Log the error if fetching user data fails
-            Log::error('Error in getme: ' . $e->getMessage());
+            Log::error('Error in getMe: ' . $e->getMessage());
             return [
                 'message' => 'An error occurred while fetching user data',
                 'data' => null,

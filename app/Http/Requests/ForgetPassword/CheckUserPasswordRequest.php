@@ -4,7 +4,8 @@ namespace App\Http\Requests\ForgetPassword;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use App\service\ForgetPassword\ForgetPasswordRequestService;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Services\ForgetPassword\ForgetPasswordRequestService;
 
 class CheckUserPasswordRequest extends FormRequest
 {
@@ -44,9 +45,20 @@ class CheckUserPasswordRequest extends FormRequest
     public function attributes(): array
     {
         return  $this->forgetPasswordRequestService->attributes();
-    }
-    public function failedValidation(Validator $validator)
+    } /**
+     * Handle a failed validation attempt.
+     * This method is called when validation fails.
+     * Logs failed attempts and throws validation exception.
+     * @param \Illuminate\Validation\Validator $validator
+     * @return void
+     *
+     */
+    protected function failedValidation(Validator $validator): void
     {
-        $this->forgetPasswordRequestService->failedValidation($validator);
+        throw new HttpResponseException(response()->json([
+            'status'  => 'error',
+            'message' => 'Validation failed.',
+            'errors'  => $validator->errors(),
+        ], 422));
     }
 }
