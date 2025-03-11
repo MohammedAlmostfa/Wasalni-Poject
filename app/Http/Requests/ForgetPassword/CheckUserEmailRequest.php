@@ -3,9 +3,9 @@
 namespace App\Http\Requests\ForgetPassword;
 
 use App\Rules\CheckUserEmail;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use App\service\ForgetPassword\ForgetPasswordRequestService;
+use Illuminate\Contracts\Validation\Validator;
+use App\Services\ForgetPassword\ForgetPasswordRequestService;
 
 class CheckUserEmailRequest extends FormRequest
 {
@@ -31,7 +31,7 @@ class CheckUserEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', new CheckUserEmail],
+            'email' => 'required', 'email','exists:table,column',
         ];
     }
     public function attributes(): array

@@ -3,15 +3,30 @@
 namespace App\Services;
 
 use Exception;
+use App\Models\City;
 use App\Models\Trip;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class TraipService
 {
-    public function showtrips($filtringdata)
+    public function showtrips($filteringData)
     {
-
+        try {
+            $trips = Trip::Filter(Trip::query(), $filteringData)->paginate(10);
+            return [
+                'message' => 'All trips retrieved successfully',
+                'data' => $trips,
+                'status' => 200,
+            ];
+        } catch (Exception $e) {
+            Log::error('Error in showtrips: ' . $e->getMessage());
+            return [
+                'message' => 'An error occurred while retrieving trips',
+                'data' => null,
+                'status' => 500,
+            ];
+        }
     }
     public function creattrip($data)
     {
@@ -28,6 +43,11 @@ class TraipService
                 'user_id' => Auth::user()->id,
 
             ]);
+            $fromCity = City::find($data['from']);
+            $toCity = City::find($data['to']);
+            $trip->from = $fromCity->city_name;
+            $trip->to = $toCity->city_name;
+
 
             return [
                 'message' => "Trip created successfully",

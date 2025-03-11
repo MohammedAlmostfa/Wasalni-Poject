@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\ForgetPassword;
 
-use App\service\ForgetPassword\ForgetPasswordRequestService;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use App\Services\ForgetPassword\ForgetPasswordRequestService;
 
 class CheckUserCodeRequest extends FormRequest
 {

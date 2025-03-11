@@ -4,22 +4,23 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\Auth\ProfileSevice;
+
+use App\Services\Auth\ProfileService;
 use App\Http\Requests\Profile\StorProfileRequest;
 use App\Http\Requests\Profile\UpdateProfileRequest;
 
 class ProfileController extends Controller
 {
-    protected $profileSevice;
+    protected $ProfileService;
 
     /**
      * Constructor to inject the ProfileSevice dependency.
      *
      * @param ProfileSevice $profileSevice The profile service instance.
      */
-    public function __construct(ProfileSevice $profileSevice)
+    public function __construct(ProfileService $ProfileService)
     {
-        $this->profileSevice = $profileSevice;
+        $this->ProfileService = $ProfileService;
     }
 
     /**
@@ -33,7 +34,7 @@ class ProfileController extends Controller
         $credentials = $request->validated();
 
         // Call the service to create the profile
-        $result = $this->profileSevice->creatAprofile($credentials);
+        $result = $this->ProfileService->createProfile($credentials);
 
         // Return a success or error response based on the result
         return $result['status'] === 200
@@ -52,7 +53,7 @@ class ProfileController extends Controller
         $credentials = $request->validated();
 
         // Call the service to update the profile
-        $result = $this->profileSevice->updateprfile($credentials);
+        $result = $this->ProfileService->updateProfile($credentials);
 
         // Return a success or error response based on the result
         return $result['status'] === 200
@@ -68,7 +69,7 @@ class ProfileController extends Controller
     public function getme()
     {
         // Call the AuthService to get the authenticated user's data
-        $result = $this->profileSevice->getme();
+        $result = $this->ProfileService->getme();
 
         // Return a success or error response based on the result
         return $result['status'] === 200

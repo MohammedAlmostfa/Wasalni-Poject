@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateProfileRequest extends FormRequest
 {
@@ -31,5 +33,22 @@ class UpdateProfileRequest extends FormRequest
             'country_id'=>'nullable|exists:countries,id',
         ];
 
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     * This method is called when validation fails.
+     * Logs failed attempts and throws validation exception.
+     * @param \Illuminate\Validation\Validator $validator
+     * @return void
+     *
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        throw new HttpResponseException(response()->json([
+            'status'  => 'error',
+            'message' => 'Validation failed.',
+            'errors'  => $validator->errors(),
+        ], 422));
     }
 }
