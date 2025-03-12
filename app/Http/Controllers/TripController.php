@@ -119,4 +119,9 @@ class TripController extends Controller
             ? self::success(null, $result['message'], $result['status'])
             : self::error(null, $result['message'], $result['status']);
     }
+
+    public function endingTrip()
+    {
+
+    }
 }

@@ -59,10 +59,9 @@ class BookingObserver
         DB::transaction(function () use ($booking) {
             $trip = $booking->trip()->lockForUpdate()->first();
             $trip->available_seats -= $booking->seats_number;
-
             $trip->save();
 
-            $this->markTripAsCompletedIfNeeded($trip);
+
         });
     }
 
@@ -71,9 +70,6 @@ class BookingObserver
      */
     protected function markTripAsCompletedIfNeeded(Trip $trip)
     {
-        if ($trip->available_seats == 0) {
-            $trip->status = 'Complete';
-            $trip->save();
-        }
+
     }
 }

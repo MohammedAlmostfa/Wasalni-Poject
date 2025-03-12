@@ -8,6 +8,8 @@ use App\Events\Registered;
 use App\Observers\BookingObserver;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\SendVerificationEmail;
+use App\Models\Trip;
+use App\Observers\TripObserver;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -31,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         Booking::observe(BookingObserver::class);
+        Trip::observe(TripObserver::class);
     }
 
     /**

@@ -170,4 +170,9 @@ class TraipService
             ];
         }
     }
+
+    public function endingTrip()
+    {
+
+    }
 }
