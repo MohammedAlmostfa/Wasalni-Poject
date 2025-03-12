@@ -10,6 +10,29 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingService
 {
+
+
+    public function showhisbookings()
+    {
+        try {
+            $booking=Booking::all();
+            return [
+                            'message' => 'All trips retrieved successfully',
+                            'data' => $$booking,
+                            'status' => 200,
+                        ];
+
+        } catch (Exception $e) {
+            // Log the error if an exception occurs
+            Log::error('Error in createBooking: ' . $e->getMessage());
+
+            // Return an error message and status
+            return [
+                'message' => 'Failed to create booking: ' . $e->getMessage(),
+                'status' => 500,
+            ];
+        }
+    }
     /**
      * Create a new booking.
      *

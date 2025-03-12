@@ -27,7 +27,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        // يمكنك إضافة منطق لعرض جميع الحجوزات هنا
+
     }
 
     /**

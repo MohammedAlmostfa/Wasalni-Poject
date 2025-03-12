@@ -13,7 +13,6 @@ class Booking extends Model
         "trip_id",
         "status",
         "seats_number",
-        "resouReason_for_rejection",
         "user_id",
     ];
 
@@ -21,4 +20,5 @@ class Booking extends Model
     {
         return $this->belongsTo(Trip::class);
     }
+
 }

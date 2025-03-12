@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->foreignId('trip_id')->constrained('trips')->cascadeOnDelete();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->integer('seats_number');
-            $table->string('reason_for_rejection')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });

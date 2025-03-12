@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Trip;
 use App\Models\User;
 use App\Models\Booking;
 use Illuminate\Auth\Access\Response;
@@ -14,7 +15,7 @@ class BookingPolicy
      *
      * @param User $user The authenticated user
      * @param Booking $booking The booking to be updated
-     * @return bool Whether the user is allowed to update the booking
+     * @return \Illuminate\Auth\Access\Response|bool Whether the user is allowed to update the booking
      */
     public function update(User $user, Booking $booking)
     {
@@ -22,7 +23,7 @@ class BookingPolicy
         if ($booking->user_id == $user->id && $booking->status == "pending") {
             return true;
         }
-        return false;
+        return Response::deny('You are not allowed to update this booking.');
     }
 
     /**
@@ -30,7 +31,7 @@ class BookingPolicy
      *
      * @param User $user The authenticated user
      * @param Booking $booking The booking to be deleted
-     * @return bool Whether the user is allowed to delete the booking
+     * @return \Illuminate\Auth\Access\Response|bool Whether the user is allowed to delete the booking
      */
     public function delete(User $user, Booking $booking)
     {
@@ -38,7 +39,7 @@ class BookingPolicy
         if ($booking->user_id == $user->id && $booking->status == "pending") {
             return true;
         }
-        return false;
+        return Response::deny('You are not allowed to delete this booking.');
     }
 
     /**
@@ -60,17 +61,27 @@ class BookingPolicy
      *
      * @param User $user The authenticated user
      * @param Booking $booking The booking to be accepted
-     * @return bool Whether the user is allowed to accept the booking
+     * @return \Illuminate\Auth\Access\Response|bool Whether the user is allowed to accept the booking
      */
     public function accept(User $user, Booking $booking)
     {
-        // Allow acceptance only if:
-        // 1. The booking belongs to the user's trip
-        // 2. The booking is in "pending" or "accepted" status
-        if ($booking->trip->user_id == $user->id && ($booking->status == "pending" || $booking->status == "accepted")) {
-            return true;
+        // Condition 1: The user must be the owner of the trip
+        if ($booking->trip->user_id != $user->id) {
+            return Response::deny('You are not allowed to accept this booking.');
         }
-        return false;
+
+        // Condition 2: The booking must be in "pending" or "accepted" status
+        if ($booking->status != "pending" && $booking->status != "accepted") {
+            return Response::deny('The booking is not in a valid status for acceptance.');
+        }
+
+        // Condition 3: There must be enough available seats
+        if ($booking->trip->available_seats < $booking->seats_number) {
+            return Response::deny('There are not enough available seats.');
+        }
+
+        // If all conditions are met, allow acceptance
+        return true;
     }
 
     /**
@@ -78,16 +89,24 @@ class BookingPolicy
      *
      * @param User $user The authenticated user
      * @param Booking $booking The booking to be rejected
-     * @return bool Whether the user is allowed to reject the booking
+     * @return \Illuminate\Auth\Access\Response|bool Whether the user is allowed to reject the booking
      */
     public function reject(User $user, Booking $booking)
     {
         // Allow rejection only if:
         // 1. The booking belongs to the user's trip
         // 2. The booking is in "pending" or "rejected" status
-        if ($booking->trip->user_id == $user->id && ($booking->status == "pending" || $booking->status == "rejected")) {
-            return true;
+        // Condition 1: The user must be the owner of the trip
+        if ($booking->trip->user_id != $user->id) {
+            return Response::deny('You are not allowed to reject this booking.');
         }
-        return false;
+
+        // Condition 2: The booking must be in "pending" or "rejected" status
+        if ($booking->status != "pending" && $booking->status != "rejected") {
+            return Response::deny('The booking is not in a valid status for rejection.');
+        }
+
+        // If all conditions are met, allow rejection
+        return true;
     }
 }

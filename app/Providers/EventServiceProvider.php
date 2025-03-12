@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use App\Events\Registered;
+use App\Models\Booking;
 
+use App\Events\Registered;
+use App\Observers\BookingObserver;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\SendVerificationEmail;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -26,9 +28,9 @@ class EventServiceProvider extends ServiceProvider
     /**
      * Register any events for your application.
      */
-    public function boot(): void
+    public function boot()
     {
-        //
+        Booking::observe(BookingObserver::class);
     }
 
     /**
