@@ -5,8 +5,6 @@ namespace App\Services;
 use Exception;
 use App\Models\Country;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
 
 class CountryService
 {
@@ -35,9 +33,10 @@ class CountryService
 
             // Return an error message and status
             return [
-                'message' => 'An error occurred while fetching countries',
-                'data' => null,
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while fetching countries.'],
+                ],
             ];
         }
     }

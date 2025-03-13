@@ -41,7 +41,7 @@ class Controller extends BaseController
     {
         return response()->json([
             'status' => 'error',
-            'message' => "$message  failed!",
+            'error' => $message  ,
             'data' => $data,
         ], $status);
     }

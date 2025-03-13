@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use GuzzleHttp\Psr7\Request;
 use App\Services\Auth\AuthService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AuthRequest\GoogelloginRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\StorProfileRequest;
 use App\Http\Requests\AuthRequest\LoginRequest;
 use App\Http\Requests\AuthRequest\RegisterRequest;
-use GuzzleHttp\Psr7\Request;
+use App\Http\Requests\AuthRequest\GoogelloginRequest;
+use App\Http\Requests\AuthRequest\VerficationRequest;
 
 class AuthController extends Controller
 {
@@ -121,5 +122,15 @@ class AuthController extends Controller
         return $result['status'] === 200
             ? self::success($result['data'], $result['message'], $result['status'])
             : self::error(null, $result['message'], $result['status']);
+    }
+
+    public function verify(VerficationRequest $request)
+    {
+        // Validate the request data
+        $validationData = $request->validated();
+        $result=$this->authService->verficationacount($validationData);
+        return $result['status'] === 200
+                    ? self::success($result['data'], $result['message'], $result['status'])
+                    : self::error(null, $result['message'], $result['status']);
     }
 }

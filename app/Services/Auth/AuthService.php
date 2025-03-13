@@ -35,7 +35,9 @@ class AuthService
             if (Cache::has($userDataKey)) {
                 return [
                     'status' => 400,
-                    'message' => "You can't register now. Please verify your account or try after an hour.",
+                    'message' => [
+                        'errorDetails' => ["You can't register now. Please verify your account or try after an hour. failed!"],
+                    ],
                 ];
             }
 
@@ -49,7 +51,9 @@ class AuthService
             if (Cache::has($verifkey)) {
                 return [
                     'status' => 400,
-                    'message' => "You can't resend the code again, please try after an hour.",
+                    'message' => [
+                        'errorDetails' => ["You can't resend the code again, please try after an hour."],
+                    ],
                 ];
             }
 
@@ -73,8 +77,10 @@ class AuthService
             // Log the error if registration fails
             Log::error('Error in registration: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred during registration',
-                'status' => 500, // HTTP status code for server error
+                'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred during registration.'],
+                ],
             ];
         }
     }
@@ -95,10 +101,10 @@ class AuthService
             if (!$token = JWTAuth::attempt($credentials)) {
                 // If authentication fails
                 return [
-                    'message' => 'Account not found',
-                    'data' => 'No data available',
-                    'status' => 401, // HTTP status code for unauthorized
-                    'authorisation' => []
+                    'status' => 401,
+                    'message' => [
+                        'errorDetails' => ['Account not found or invalid credentials.'],
+                    ],
                 ];
             } else {
                 // If authentication succeeds
@@ -107,10 +113,8 @@ class AuthService
                     'message' => 'Login successful',
                     'status' => 201, // HTTP status code for successful creation
                     'data' => [
-                        'authorisation' => [
-                            'token' => $token, // Return the generated token
-                            'type' => 'bearer', // Token type
-                        ]
+                        'token' => $token, // Return the generated token
+                        'type' => 'bearer', // Token type
                     ],
                 ];
             }
@@ -118,10 +122,10 @@ class AuthService
             // Log the error if login fails
             Log::error('Error in login: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred during login: ' . $e->getMessage(),
-                'status' => 500, // HTTP status code for server error
-                'data' => 'Data not available',
-                'authorisation' => [],
+                'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred during login.'],
+                ],
             ];
         }
     }
@@ -146,8 +150,10 @@ class AuthService
             // Log the error if logout fails
             Log::error('Error in logout: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred during logout',
-                'status' => 500, // HTTP status code for server error
+                'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred during logout.'],
+                ],
             ];
         }
     }
@@ -168,18 +174,20 @@ class AuthService
                 'status' => 200, // HTTP status code for success
                 'data' => [
                     'user' => Auth::user(), // Return the authenticated user
-                    'authorisation' => [
+
                         'token' => Auth::refresh(), // Return the new token
-                        'type' => 'bearer', // Token type
-                    ]
+
+
                 ]
             ];
         } catch (Exception $e) {
             // Log the error if token refresh fails
             Log::error('Error in token refresh: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred while refreshing the token',
-                'status' => 500, // HTTP status code for server error
+                'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while refreshing the token.'],
+                ],
             ];
         }
     }
@@ -202,8 +210,10 @@ class AuthService
             // If the request fails
             if ($response->failed()) {
                 return [
-                    'message' => 'Failed to fetch user info from Google',
                     'status' => $response->status(),
+                    'message' => [
+                        'errorDetails' => ['Failed to fetch user info from Google.'],
+                    ],
                 ];
             }
 
@@ -212,7 +222,8 @@ class AuthService
 
             // Find or create the user
             $user = User::firstOrCreate(
-                ['email' => $userData['email'],
+                [
+                    'email' => $userData['email'],
                     'password' => bcrypt('123456dummy'),
                     'google_id' => $userData['id'],
                 ]
@@ -236,9 +247,80 @@ class AuthService
 
             // Return error response
             return [
-                'message' => 'An error occurred while logging in with Google',
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while logging in with Google.'],
+                ],
             ];
         }
     }
+
+    public function verficationacount($data)
+    {
+        try {
+            // Generate the cache key for the verification code
+            $verifkey = 'verification_code_' . $data['email'];
+
+            // Retrieve the cached verification code
+            $cachedCode = Cache::get($verifkey);
+
+            // Check if the provided code matches the cached code
+            if ($cachedCode == $data['code']) {
+                // Retrieve the user data from cache
+                $userDataKey = 'user_data_' . $data['email'];
+                $userData = Cache::get($userDataKey);
+
+                if (!$userData) {
+                    return [
+                        'status' => 404,
+                        'message' => [
+                            'errorDetails' => ['User data not found in cache.'],
+                        ],
+                    ];
+                }
+
+                // Create the user in the database
+                $user = User::create([
+                    'email' => $userData['email'],
+                    'password' => bcrypt($userData['password']), // Ensure to hash the password
+                    'email_verified_at' => now(),
+                ]);
+                $token = JWTAuth::fromUser($user);
+
+                // Clear the verification code and user data from the cache
+                Cache::forget($verifkey);
+                Cache::forget($userDataKey);
+
+                // Fetch all countries
+                $countries = Country::select('id', 'country_name')->get();
+
+                return [
+                    'message' => 'Email verified successfully and user registered',
+                    'status' => 200,
+                    'data' => [
+                        'token' => $token, // Return the generated token
+                        'countries' => $countries,
+                    ],
+                ];
+            } else {
+                return [
+                    'status' => 400,
+                    'message' => [
+                        'errorDetails' => ['Invalid verification code.'],
+                    ],
+                ];
+            }
+        } catch (Exception $e) {
+            // Log the error
+            Log::error('Error in verficationacount: ' . $e->getMessage());
+
+            return [
+                'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred during account verification.'],
+                ],
+            ];
+        }
+    }
+
 }

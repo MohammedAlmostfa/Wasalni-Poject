@@ -10,29 +10,35 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingService
 {
-
-
+    /**
+     * Show all bookings.
+     *
+     * @return array Response containing status, message, and data
+     */
     public function showhisbookings()
     {
         try {
-            $booking=Booking::all();
-            return [
-                            'message' => 'All trips retrieved successfully',
-                            'data' => $$booking,
-                            'status' => 200,
-                        ];
+            $bookings = Booking::all();
 
+            return [
+                'message' => 'All bookings retrieved successfully',
+                'data' => $bookings,
+                'status' => 200,
+            ];
         } catch (Exception $e) {
             // Log the error if an exception occurs
-            Log::error('Error in createBooking: ' . $e->getMessage());
+            Log::error('Error in showhisbookings: ' . $e->getMessage());
 
             // Return an error message and status
             return [
-                'message' => 'Failed to create booking: ' . $e->getMessage(),
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['Failed to retrieve bookings.'],
+                ],
             ];
         }
     }
+
     /**
      * Create a new booking.
      *
@@ -46,8 +52,10 @@ class BookingService
             $trip = Trip::find($data['trip_id']);
             if (!$trip) {
                 return [
-                    'message' => 'Trip not found',
                     'status' => 404,
+                    'message' => [
+                        'errorDetails' => ['Trip not found.'],
+                    ],
                 ];
             }
 
@@ -70,8 +78,10 @@ class BookingService
 
             // Return an error message and status
             return [
-                'message' => 'Failed to create booking: ' . $e->getMessage(),
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['Failed to create booking.'],
+                ],
             ];
         }
     }
@@ -107,8 +117,10 @@ class BookingService
 
             // Return an error message and status
             return [
-                'message' => 'Failed to update booking: ' . $e->getMessage(),
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['Failed to update booking.'],
+                ],
             ];
         }
     }
@@ -136,8 +148,10 @@ class BookingService
 
             // Return an error message and status
             return [
-                'message' => 'Failed to delete booking: ' . $e->getMessage(),
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['Failed to delete booking.'],
+                ],
             ];
         }
     }
@@ -154,8 +168,10 @@ class BookingService
             // Check if the booking is already accepted
             if ($booking->status === 'accepted') {
                 return [
-                    'message' => 'Booking is already accepted',
                     'status' => 400,
+                    'message' => [
+                        'errorDetails' => ['Booking is already accepted.'],
+                    ],
                 ];
             }
 
@@ -176,8 +192,10 @@ class BookingService
 
             // Return an error message and status
             return [
-                'message' => 'Failed to accept booking: ' . $e->getMessage(),
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['Failed to accept booking.'],
+                ],
             ];
         }
     }
@@ -194,8 +212,10 @@ class BookingService
             // Check if the booking is already rejected
             if ($booking->status === 'rejected') {
                 return [
-                    'message' => 'Booking is already rejected',
                     'status' => 400,
+                    'message' => [
+                        'errorDetails' => ['Booking is already rejected.'],
+                    ],
                 ];
             }
 
@@ -216,8 +236,10 @@ class BookingService
 
             // Return an error message and status
             return [
-                'message' => 'Failed to reject booking: ' . $e->getMessage(),
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['Failed to reject booking.'],
+                ],
             ];
         }
     }

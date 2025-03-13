@@ -4,10 +4,8 @@ namespace App\Services;
 
 use Exception;
 use App\Models\User;
-use App\Models\Country;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class CityService
 {
@@ -27,6 +25,16 @@ class CityService
             // Find the user by ID
             $user = User::find($id);
 
+            // Check if the user exists
+            if (!$user) {
+                return [
+                    'status' => 404,
+                    'message' => [
+                        'errorDetails' => ['User not found.'],
+                    ],
+                ];
+            }
+
             // Access cities through the user's profile and country
             $cities = $user->cities;
 
@@ -42,8 +50,10 @@ class CityService
 
             // Return an error message and status
             return [
-                'message' => 'An error occurred while retrieving cities: ' . $e->getMessage(),
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while retrieving cities.'],
+                ],
             ];
         }
     }

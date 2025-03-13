@@ -72,18 +72,20 @@ class ProfileService
                 ];
             } else {
                 return [
-                    'message' => 'User already has a profile',
-                    'data' => $user->profile, // Return the existing profile
-                    'status' => 200,
+                    'status' => 400,
+                    'message' => [
+                        'errorDetails' => ['User already has a profile.'],
+                    ],
                 ];
             }
         } catch (Exception $e) {
             // Log the error
             Log::error('Error in creating profile: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred while creating the profile',
                 'status' => 500,
-                'data' => null,
+                'message' => [
+                    'errorDetails' => ['An error occurred while creating the profile.'],
+                ],
             ];
         }
     }
@@ -147,18 +149,20 @@ class ProfileService
                 ];
             } else {
                 return [
-                    'message' => 'User does not have a profile',
-                    'data' => null,
                     'status' => 404,
+                    'message' => [
+                        'errorDetails' => ['User does not have a profile.'],
+                    ],
                 ];
             }
         } catch (Exception $e) {
             // Log the error
             Log::error('Error in updating profile: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred while updating the profile',
                 'status' => 500,
-                'data' => null,
+                'message' => [
+                    'errorDetails' => ['An error occurred while updating the profile.'],
+                ],
             ];
         }
     }
@@ -195,9 +199,10 @@ class ProfileService
             // Log the error if fetching user data fails
             Log::error('Error in getMe: ' . $e->getMessage());
             return [
-                'message' => 'An error occurred while fetching user data',
-                'data' => null,
-                'status' => 500, // HTTP status code for server error
+                'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while fetching user data.'],
+                ],
             ];
         }
     }

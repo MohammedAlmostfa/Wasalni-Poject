@@ -8,7 +8,7 @@ use App\Models\Trip;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
-class TraipService
+class TripService
 {
     /**
      * Retrieve all trips with optional filtering.
@@ -21,7 +21,7 @@ class TraipService
      *               - 'data': The paginated list of trips.
      *               - 'status': The HTTP status code (200 for success, 500 for error).
      */
-    public function showtrips($filteringData)
+    public function showTrips($filteringData)
     {
         try {
             // Retrieve and filter trips
@@ -34,12 +34,13 @@ class TraipService
             ];
         } catch (Exception $e) {
             // Log the error if an exception occurs
-            Log::error('Error in showtrips: ' . $e->getMessage());
+            Log::error('Error in showTrips: ' . $e->getMessage());
 
             return [
-                'message' => 'An error occurred while retrieving trips',
-                'data' => null,
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while retrieving trips.'],
+                ],
             ];
         }
     }
@@ -55,7 +56,7 @@ class TraipService
      *               - 'data': The created trip.
      *               - 'status': The HTTP status code (200 for success, 500 for error).
      */
-    public function creattrip($data)
+    public function createTrip($data)
     {
         try {
             // Create a new trip
@@ -83,12 +84,13 @@ class TraipService
             ];
         } catch (Exception $e) {
             // Log the error if an exception occurs
-            Log::error('Error in creattrip: ' . $e->getMessage());
+            Log::error('Error in createTrip: ' . $e->getMessage());
 
             return [
-                'message' => 'An error occurred while creating the trip',
-                'data' => null,
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while creating the trip.'],
+                ],
             ];
         }
     }
@@ -106,7 +108,7 @@ class TraipService
      *               - 'data': The updated trip data or null if an error occurred.
      *               - 'status': The HTTP status code (200 for success, 500 for error).
      */
-    public function updatetrip($data, Trip $trip)
+    public function updateTrip($data, Trip $trip)
     {
         try {
             // Update the trip with the provided data
@@ -127,12 +129,13 @@ class TraipService
             ];
         } catch (Exception $e) {
             // Log the error if an exception occurs
-            Log::error('Error in updatetrip: ' . $e->getMessage());
+            Log::error('Error in updateTrip: ' . $e->getMessage());
 
             return [
-                'message' => 'An error occurred while updating the trip',
-                'data' => null,
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while updating the trip.'],
+                ],
             ];
         }
     }
@@ -149,7 +152,7 @@ class TraipService
      *               - 'message': A message describing the outcome.
      *               - 'status': The HTTP status code (200 for success, 500 for error).
      */
-    public function delettrip(Trip $trip)
+    public function deleteTrip(Trip $trip)
     {
         try {
             // Delete the trip
@@ -161,18 +164,49 @@ class TraipService
             ];
         } catch (Exception $e) {
             // Log the error if an exception occurs
-            Log::error('Error in deletetrip: ' . $e->getMessage());
+            Log::error('Error in deleteTrip: ' . $e->getMessage());
 
             return [
-                'message' => 'An error occurred while deleting the trip',
-                'data' => null,
                 'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while deleting the trip.'],
+                ],
             ];
         }
     }
 
-    public function endingTrip()
+    /**
+     * End a trip.
+     *
+     * This method marks a trip as ended.
+     *
+     * @param Trip $trip The trip to be ended.
+     * @return array Returns an array containing the result of the operation.
+     *               - 'message': A message describing the outcome.
+     *               - 'status': The HTTP status code (200 for success, 500 for error).
+     */
+    public function endingTrip(Trip $trip)
     {
+        try {
+            // Mark the trip as ended
+            $trip->update([
+                'status' => 'ended',
+            ]);
 
+            return [
+                'message' => 'Trip ended successfully',
+                'status' => 200,
+            ];
+        } catch (Exception $e) {
+            // Log the error if an exception occurs
+            Log::error('Error in endingTrip: ' . $e->getMessage());
+
+            return [
+                'status' => 500,
+                'message' => [
+                    'errorDetails' => ['An error occurred while ending the trip.'],
+                ],
+            ];
+        }
     }
 }

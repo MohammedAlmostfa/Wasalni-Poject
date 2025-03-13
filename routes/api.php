@@ -41,7 +41,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::post('refresh', [AuthController::class, 'refresh']);
 
 // Email verification route
-Route::post('/verify-email/{id}', [VerificationController::class, 'verify']);
+Route::post('/verify-email/{id}', [AuthController::class, 'verify']);
 
 // Change password routes
 Route::post('/changePassword', [ForgetPasswordController::class, 'changePassword']);
