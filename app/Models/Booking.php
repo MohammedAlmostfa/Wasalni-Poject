@@ -20,5 +20,9 @@ class Booking extends Model
     {
         return $this->belongsTo(Trip::class);
     }
+    public function rating()
+    {
+        return $this->hasOne(Rating::class);
+    }
 
 }

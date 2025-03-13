@@ -3,56 +3,53 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rating;
+use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Services\RatingService;
+
+use App\Http\Requests\RatingRequest\StorRatingRequest;
+use App\Http\Requests\RatingRequest\UpdateRatingRequest;
 
 class RatingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    protected $ratingService;
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function __construct(RatingService $ratingService)
     {
-        //
+        $this->ratingService = $ratingService;
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorRatingRequest $request)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Rating $rating)
-    {
-        //
-    }
+        $validationData = $request->validated();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Rating $rating)
-    {
-        //
+        $this->authorize('createtrip', $validationData["booking_id"]);
+
+        $result = $this->ratingService->createRating($validationData);
+
+        return $result['status'] === 200
+            ? self::success($result['data'], $result['message'], $result['status'])
+            : self::error(null, $result['message'], $result['status']);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Rating $rating)
+    public function update(UpdateRatingRequest $request, Rating $rating)
     {
-        //
+        $this->authorize('update', $rating);
+
+        $validationData = $request->validated();
+
+        $result = $this->ratingService->updateRating($validationData, $rating);
+
+        return $result['status'] === 200
+            ? self::success($result['data'], $result['message'], $result['status'])
+            : self::error(null, $result['message'], $result['status']);
     }
 
     /**
@@ -60,6 +57,12 @@ class RatingController extends Controller
      */
     public function destroy(Rating $rating)
     {
-        //
+        $this->authorize('delete', $rating);
+
+        $result = $this->ratingService->deleteRating($rating);
+
+        return $result['status'] === 200
+            ? self::success($result['data'], $result['message'], $result['status'])
+            : self::error(null, $result['message'], $result['status']);
     }
 }

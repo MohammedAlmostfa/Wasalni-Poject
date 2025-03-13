@@ -11,6 +11,9 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
+use App\Http\Controllers\FavoritePersonController;
+use App\Http\Controllers\RatingController;
+use App\Models\FavoritePerson;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,4 +79,9 @@ Route::middleware('auth:api')->group(function () {
 
     // Reject a booking
     Route::post('/booking/{booking}/reject', [BookingController::class, 'reject']);
+
+    Route::apiResource("rating", RatingController::class);
+
+    Route::apiResource("favorite", FavoritePersonController::class);
+
 });

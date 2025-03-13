@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -43,15 +44,15 @@ class VerficatioService
             // Clear the verification code and user data from the cache
             Cache::forget($verifkey);
             Cache::forget($userDataKey);
+            $countries=Country::select('id', 'country_name')->get();
+
 
             return [
                 'message' => 'Email verified successfully and user registered',
                              'status' => 200,
                 'data' => [
-                    'authorisation' => [
                         'token' => $token, // Return the generated token
-                        'type' => 'bearer', // Token type
-                    ]
+'countries'=>$countries
                 ]
             ];
         } else {

@@ -6,8 +6,11 @@ namespace App\Providers;
 
 use App\Models\Trip;
 use App\Models\Booking;
+use App\Models\FavoritePerson;
+use App\Models\Rating;
 use App\Policies\TripPolicy;
 use App\Policies\BookingPolicy;
+use App\Policies\RatingPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -20,6 +23,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Trip::class => TripPolicy::class,
         Booking::class=>BookingPolicy::class,
+        Rating::class=>RatingPolicy::class,
+        FavoritePerson::class=>FavoritePerson::class,
     ];
 
     /**

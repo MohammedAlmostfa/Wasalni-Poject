@@ -89,4 +89,21 @@ class User extends Authenticatable implements JWTSubject
             'country_id'  // Local key on profiles table
         );
     }
+    // Other methods and properties...
+
+    /**
+     * Get the favorite people added by this user.
+     */
+    public function favoritePeople()
+    {
+        return $this->hasMany(FavoritePerson::class, 'user_id');
+    }
+
+    /**
+     * Get the users who added this user as a favorite.
+     */
+    public function favoritedBy()
+    {
+        return $this->hasMany(FavoritePerson::class, 'favorite_user_id');
+    }
 }

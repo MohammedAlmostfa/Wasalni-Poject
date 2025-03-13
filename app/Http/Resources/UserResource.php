@@ -26,6 +26,7 @@ class UserResource extends JsonResource
                 'birthday' => $this->profile->birthday,
                 'phone' => $this->profile->phone,
                 'address' => $this->profile->address,
+                'country_id'=>$this->profile->country_id,
             ],
         ];
     }
