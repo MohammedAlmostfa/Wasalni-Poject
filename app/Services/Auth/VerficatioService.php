@@ -23,7 +23,7 @@ class VerficatioService
         // Check if the provided code matches the cached code
         if ($cachedCode ==  $data['code']) {
             // Retrieve the user data from cache
-            $userDataKey = 'user_data_' .$data['email'];
+            $userDataKey = 'user_data_' . $data['email'];
             $userData = Cache::get($userDataKey);
 
             if (!$userData) {
@@ -44,15 +44,15 @@ class VerficatioService
             // Clear the verification code and user data from the cache
             Cache::forget($verifkey);
             Cache::forget($userDataKey);
-            $countries=Country::select('id', 'country_name')->get();
+            $countries = Country::select('id', 'country_name')->get();
 
 
             return [
                 'message' => 'Email verified successfully and user registered',
-                             'status' => 200,
+                'status' => 200,
                 'data' => [
-                        'token' => $token, // Return the generated token
-'countries'=>$countries
+                    'token' => $token, // Return the generated token
+                    'countries' => $countries
                 ]
             ];
         } else {
@@ -62,5 +62,4 @@ class VerficatioService
             ];
         }
     }
-
 }
