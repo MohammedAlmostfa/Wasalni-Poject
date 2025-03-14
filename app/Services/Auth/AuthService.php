@@ -42,8 +42,6 @@ class AuthService
             // Store user data in cache for 1 hour
             Cache::put($userDataKey, $data, 3600);
 
-
-
             // Generate a unique cache key for the verification code
             $verifkey = 'verification_code_' . $data['email'];
 
@@ -84,10 +82,6 @@ class AuthService
             ];
         }
     }
-
-
-
-
 
     /**
      * Login a user.
@@ -224,25 +218,41 @@ class AuthService
             // Find or create the user
             $user = User::firstOrCreate(
                 [
-        'email' => $userData['email'], // الشرط للبحث
-    ],
+                    'email' => $userData['email'], // Use email as the unique identifier
+                ],
                 [
-        'password' => bcrypt('123456dummy'), // البيانات التي سيتم استخدامها في حالة الإنشاء
-    ]
+                    'password' => bcrypt('123456dummy'), // Default password for Google users
+                ]
             );
 
             // Generate a JWT token for the user
             $token = JWTAuth::fromUser($user);
 
-            // Return success response
-            return [
-                'message' => __('auth.google_login_success'),
-                'status' => 200,
-                'data' => [
-                    'token' => $token, // Return the generated token
+            // Check if the user was recently created
+            if ($user->wasRecentlyCreated) {
+                // Fetch all countries for new users
+                $countries = Country::select('id', 'country_name')->get();
 
-                ],
-            ];
+                return [
+                    'message' => __('auth.google_login_success'),
+                    'status' => 200,
+                    'data' => [
+                        'token' => $token,
+                        'type' => 'bearer', // Token type
+                        'countries' => $countries, // Return countries for new users
+                    ],
+                ];
+            } else {
+                // Return success response for existing users
+                return [
+                    'message' => __('auth.google_login_success'),
+                    'status' => 200,
+                    'data' => [
+                        'token' => $token,
+                        'type' => 'bearer', // Token type
+                    ],
+                ];
+            }
         } catch (Exception $e) {
             // Log the error
             Log::error('Error in login with Google: ' . $e->getMessage());
@@ -259,6 +269,9 @@ class AuthService
 
     /**
      * Verify user account using the verification code.
+     *
+     * This method verifies the user's account using the verification code sent to their email.
+     * If the code is correct, it creates the user in the database and returns a JWT token.
      *
      * @param array $data Contains email and verification code.
      * @return array Contains message, status, and additional data.
@@ -290,9 +303,11 @@ class AuthService
                 // Create the user in the database
                 $user = User::create([
                     'email' => $userData['email'],
-                    'password' => bcrypt($userData['password']), // Ensure to hash the password
-                    'email_verified_at' => now(),
+                    'password' => bcrypt($userData['password']), // Hash the password
+                    'email_verified_at' => now(), // Mark the email as verified
                 ]);
+
+                // Generate a JWT token for the user
                 $token = JWTAuth::fromUser($user);
 
                 // Clear the verification code and user data from the cache
@@ -307,7 +322,7 @@ class AuthService
                     'status' => 200,
                     'data' => [
                         'token' => $token, // Return the generated token
-                        'countries' => $countries,
+                        'countries' => $countries, // Return countries for new users
                     ],
                 ];
             } else {

@@ -213,6 +213,7 @@ return [
         'seat_price' => 'سعر المقعد',
         'available_seats' => 'المقاعد المتاحة',
         'code' => 'رمز التحقق',
+        'googleToken'=>"رمز الوصول من  غوغل"
     ],
 
 ];
