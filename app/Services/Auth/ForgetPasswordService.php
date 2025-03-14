@@ -118,35 +118,58 @@ class ForgetPasswordService
     /**
      * Change the user's password.
      *
-     * @param string $email The email address of the user.
-     * @param string $password The new password.
+     * @param array $data An array containing the email, code, and new password.
      * @return array An array containing the status and message.
      */
-    public function changePassword($email, $password)
+    public function changePassword($email, $password, $code)
     {
         try {
-            // Find the user by email
-            $user = User::where('email', $email)->first();
+            $key = $email;
 
-            if ($user) {
-                // Hash the new password and save it
-                $user->password = Hash::make($password);
-                $user->save();
+            // Check if the code exists in the cache
+            if (Cache::has($key)) {
+                $cached_code = Cache::get($key);
 
-                // Delete the cached code after the password is changed
-                $key = $email;
-                Cache::delete($key);
+                // Verify if the provided code matches the cached code
+                if ($code != $cached_code) {
+                    return [
+                        'status' => 400,
+                        'message' => [
+                            'errorDetails' => [__('auth.invalid_code')],
+                        ],
+                    ];
+                }
 
-                return [
-                    'status' => 200,
-                    'message' => __('auth.password_changed'),
-                ];
+                // Find the user by email
+                $user = User::where('email', $email)->first();
+
+                if ($user) {
+                    // Hash the new password and save it
+                    $user->password = Hash::make($password);
+                    $user->save();
+
+                    // Delete the cached code after the password is changed
+                    Cache::delete($key);
+
+                    return [
+                        'status' => 200,
+                        'message' => __('auth.password_changed'),
+                    ];
+                } else {
+                    // If the user is not found, return a 404 response
+                    return [
+                        'status' => 404,
+                        'message' => [
+                            'errorDetails' => [__('auth.user_not_found')],
+                        ],
+                    ];
+                }
             } else {
-                // If the user is not found, return a 404 response
+                // If the key is not found in the cache, return a 400 response
                 return [
-                    'status' => 404,
+                    'status' => 400,
                     'message' => [
-                        'errorDetails' => [__('auth.user_not_found')],
+                        'errorDetails' => [__('auth.invalid_key')],
                     ],
                 ];
             }

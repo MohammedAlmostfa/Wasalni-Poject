@@ -24,13 +24,12 @@ class ForgetPasswordController extends Controller
     public function checkEmail(CheckUserEmailRequest $request)
     {
         $email = $request->validated()['email'];
-        $data = $this->forgetPasswordService->checkEmail($email);
-        if ($data['status'] == 200) {
-            return $this->success(message: $data['message'], status: $data['status']);
-        } else {
-            return $this->error(message: $data['message'], status: $data['status']);
-        }
+        $result = $this->forgetPasswordService->checkEmail($email);
+        return $result['status'] === 201
+           ? self::success($result['data'], $result['message'], $result['status'])
+           : self::error(null, $result['message'], $result['status']);
     }
+
     /**
      * check code
      * @param CheckUserCodeRequest request
@@ -40,13 +39,12 @@ class ForgetPasswordController extends Controller
     {
         $email = $request->validated()['email'];
         $code = $request->validated()['code'];
-        $data = $this->forgetPasswordService->checkCode($email, $code);
-        if ($data['status'] == 200) {
-            return $this->success(message: $data['message'], status: $data['status']);
-        } else {
-            return $this->error(message: $data['message'], status: $data['status']);
-        }
+        $result = $this->forgetPasswordService->checkCode($email, $code);
+        return $result['status'] === 201
+            ? self::success($result['data'], $result['message'], $result['status'])
+            : self::error(null, $result['message'], $result['status']);
     }
+
 
     /**
      * change password
@@ -57,10 +55,12 @@ class ForgetPasswordController extends Controller
     public function changePassword(CheckUserPasswordRequest $request)
     {
         $email = $request->validated()['email'];
+        $code = $request->validated()['code'];
         $password = $request->validated()['password'];
+        $result =$this->forgetPasswordService->changePassword($email, $password, $code);
+        return $result['status'] === 201
+            ? self::success($result['data'], $result['message'], $result['status'])
+            : self::error(null, $result['message'], $result['status']);
 
-        $this->forgetPasswordService->changePassword($email, $password);
-
-        return $this->success(message: "password changed", status: 200);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 return [
 
     /*
@@ -17,8 +16,7 @@ return [
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
-//authantication
-
+    // Authentication
     'registration_error' => "You can't register now. Please verify your account or try after an hour.",
     'verification_code_error' => "You can't resend the code again, please try after an hour.",
     'verification_success' => "Verification code sent successfully.",
@@ -35,13 +33,14 @@ return [
     'invalid_verification_code' => "Invalid verification code.",
     'email_verified_and_registered' => "Email verified successfully and user registered.",
     'not_registered_yet' => "You are not registered yet.",
-//forget password
 
+    // Forget password
     'code_correct' => "The code you entered is correct.",
     'code_expired' => "The code sent to this account has expired.",
     'password_changed' => "Password changed successfully.",
-    'user_not_found' => " there is  any user with this email.",
-'no_code_found' => " Please Try again",
+    'user_not_found' => "There is no user with this email.",
+    'no_code_found' => "Please try again.",
 
-
+    'invalid_code' => "The provided code is invalid or does not match. Please try again.",
+    'invalid_key' => "The provided key is invalid or has expired. Please request a new code.",
 ];

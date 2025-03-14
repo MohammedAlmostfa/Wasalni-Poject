@@ -30,7 +30,8 @@ class CheckUserPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'exists:users,email'],
+            'code' => ['required', 'integer', 'digits:6'],
             'password' => [
                 'required',
                 'min:8',
@@ -45,7 +46,8 @@ class CheckUserPasswordRequest extends FormRequest
     public function attributes(): array
     {
         return  $this->forgetPasswordRequestService->attributes();
-    } /**
+    }
+    /**
      * Handle a failed validation attempt.
      * This method is called when validation fails.
      * Logs failed attempts and throws validation exception.

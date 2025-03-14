@@ -30,8 +30,8 @@ class CheckUserCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
-            'code' => ['required', 'string', 'digits:6'],
+            'email' => ['required', 'email', 'exists:users,email'],
+            'code' => ['required', 'integer', 'digits:6'],
         ];
     }
     public function attributes(): array
