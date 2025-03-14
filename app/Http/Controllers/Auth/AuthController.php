@@ -8,6 +8,7 @@ use App\Services\Auth\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\StorProfileRequest;
+use App\Http\Requests\AuthRequest\ResendCode;
 use App\Http\Requests\AuthRequest\LoginRequest;
 use App\Http\Requests\AuthRequest\RegisterRequest;
 use App\Http\Requests\AuthRequest\GoogelloginRequest;
@@ -48,6 +49,46 @@ class AuthController extends Controller
 
         // Return a success or error response based on the result
         return $result['status'] === 201
+            ? self::success($result['data'], $result['message'], $result['status'])
+            : self::error(null, $result['message'], $result['status']);
+    }
+
+    /**
+     * Verify the user's account using the verification code.
+     *
+     * @param VerficationRequest $request The request containing email and verification code.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function verify(VerficationRequest $request)
+    {
+        // Validate the request data
+        $validationData = $request->validated();
+
+        // Call the AuthService to verify the account
+        $result = $this->authService->verficationacount($validationData);
+
+        // Return a success or error response based on the result
+        return $result['status'] === 200
+            ? self::success($result['data'], $result['message'], $result['status'])
+            : self::error(null, $result['message'], $result['status']);
+    }
+
+    /**
+     * Resend the verification code to the user's email.
+     *
+     * @param ResendCode $request The request containing the user's email.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resendCode(ResendCode $request)
+    {
+        // Validate the request data
+        $validationData = $request->validated();
+
+        // Call the AuthService to resend the verification code
+        $result = $this->authService->resendCode($validationData);
+
+        // Return a success or error response based on the result
+        return $result['status'] === 200
             ? self::success($result['data'], $result['message'], $result['status'])
             : self::error(null, $result['message'], $result['status']);
     }
@@ -122,15 +163,5 @@ class AuthController extends Controller
         return $result['status'] === 200
             ? self::success($result['data'], $result['message'], $result['status'])
             : self::error(null, $result['message'], $result['status']);
-    }
-
-    public function verify(VerficationRequest $request)
-    {
-        // Validate the request data
-        $validationData = $request->validated();
-        $result=$this->authService->verficationacount($validationData);
-        return $result['status'] === 200
-                    ? self::success($result['data'], $result['message'], $result['status'])
-                    : self::error(null, $result['message'], $result['status']);
     }
 }

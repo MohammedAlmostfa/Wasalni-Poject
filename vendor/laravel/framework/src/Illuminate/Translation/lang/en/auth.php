@@ -41,7 +41,7 @@ return [
     'code_expired' => "The code sent to this account has expired.",
     'password_changed' => "Password changed successfully.",
     'user_not_found' => " there is  any user with this email.",
-
+'no_code_found' => " Please Try again",
 
 
 ];

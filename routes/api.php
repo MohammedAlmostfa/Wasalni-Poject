@@ -29,70 +29,63 @@ use App\Models\FavoritePerson;
 // Public routes (no authentication required)
 
 // User login
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/loginwithGoogel', [AuthController::class, 'loginwithGoogel']);
+Route::post('/login', [AuthController::class, 'login']); // Handles user login
+Route::post('/loginwithGoogel', [AuthController::class, 'loginwithGoogel']); // Handles login via Google OAuth
+
 // User registration
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register']); // Handles user registration
 
 // User logout
-Route::post('logout', [AuthController::class, 'logout']);
+Route::post('logout', [AuthController::class, 'logout']); // Logs out the authenticated user
 
 // Refresh JWT token
-Route::post('refresh', [AuthController::class, 'refresh']);
+Route::post('refresh', [AuthController::class, 'refresh']); // Refreshes the JWT token
 
-// Email verification route
-Route::post('/verify-email/{id}', [AuthController::class, 'verify']);
+// Email verification routes
+Route::post('/verify-email', [AuthController::class, 'verify']); // Verifies user's email
+Route::post('/resendCode', [AuthController::class, 'resendCode']); // Resends the verification code
 
 // Change password routes
-Route::post('/changePassword', [ForgetPasswordController::class, 'changePassword']);
-Route::post('/checkEmail', [ForgetPasswordController::class, 'checkEmail']);
-Route::post('/checkCode', [ForgetPasswordController::class, 'checkCode']);
+Route::post('/changePassword', [ForgetPasswordController::class, 'changePassword']); // Handles password change
+Route::post('/checkEmail', [ForgetPasswordController::class, 'checkEmail']); // Checks if an email is registered
+Route::post('/checkCode', [ForgetPasswordController::class, 'checkCode']); // Verifies a password reset code
 
 // Protected routes (require authentication)
 Route::middleware('auth:api')->group(function () {
     // Get authenticated user details
-    Route::get('/me', [ProfileController::class, 'getme']);
+    Route::get('/me', [ProfileController::class, 'getme']); // Retrieves details of the logged-in user
 
-    // API resource routes for countries
-    // CRUD operations for countries
-    Route::apiResource('countries', CountryController::class);
+    // API resource routes for countries (CRUD operations)
+    Route::apiResource('countries', CountryController::class); // Handles CRUD for countries
 
-    // API resource routes for cities
-    // CRUD operations for cities
-    Route::apiResource('cities', CityController::class);
+    // API resource routes for cities (CRUD operations)
+    Route::apiResource('cities', CityController::class); // Handles CRUD for cities
 
-    // API resource routes for trips
-    // CRUD operations for trips
+    // API resource routes for trips (CRUD operations)
+    Route::apiResource('trip', TripController::class)->names([
+        'index' => 'trip.list', // List all trips
+        'store' => 'trip.create', // Create a new trip
+        'show' => 'trip.details', // Get details of a specific trip
+        'update' => 'trip.update', // Update a trip
+        'destroy' => 'trip.delete', // Delete a trip
+    ]);
 
-    Route::group(['middleware' => ['role:admin']], function () {
-        Route::apiResource('trip', TripController::class)->names([
-         'index' => 'trip.list',
-         'store' => 'trip.create',
-         'show' => 'trip.details',
-         'update' => 'trip.update',
-         'destroy' => 'trip.delete',
-]);
+    // API resource routes for user profile
+    Route::put('profile', [ProfileController::class, 'update']); // Updates user profile
+    Route::apiResource('profile', ProfileController::class); // Handles additional profile-related actions
 
-    });
-
-
-    // API resource routes for profile
-    // Update user profile
-    Route::put('profile', [ProfileController::class, 'update']);
-    Route::apiResource('profile', ProfileController::class);
-
-    // API resource routes for bookings
-    // CRUD operations for bookings
-    Route::apiResource('booking', BookingController::class);
+    // API resource routes for bookings (CRUD operations)
+    Route::apiResource('booking', BookingController::class); // Handles CRUD for bookings
 
     // Accept a booking
-    Route::post('/booking/{booking}/accept', [BookingController::class, 'accept']);
+    Route::post('/booking/{booking}/accept', [BookingController::class, 'accept']); // Accepts a booking request
 
     // Reject a booking
-    Route::post('/booking/{booking}/reject', [BookingController::class, 'reject']);
+    Route::post('/booking/{booking}/reject', [BookingController::class, 'reject']); // Rejects a booking request
 
-    Route::apiResource("rating", RatingController::class);
+    // API resource routes for ratings
+    Route::apiResource("rating", RatingController::class); // Handles CRUD operations for ratings
 
-    Route::apiResource("favorite", FavoritePersonController::class);
-
+    // API resource routes for favorite persons
+    Route::apiResource("favorite", FavoritePersonController::class); // Handles CRUD operations for favorite persons
 });
