@@ -42,6 +42,8 @@ class AuthService
             // Store user data in cache for 1 hour
             Cache::put($userDataKey, $data, 3600);
 
+
+
             // Generate a unique cache key for the verification code
             $verifkey = 'verification_code_' . $data['email'];
 
@@ -82,6 +84,10 @@ class AuthService
             ];
         }
     }
+
+
+
+
 
     /**
      * Login a user.
@@ -218,10 +224,11 @@ class AuthService
             // Find or create the user
             $user = User::firstOrCreate(
                 [
-                    'email' => $userData['email'],
-                    'password' => bcrypt('123456dummy'),
-                    'google_id' => $userData['id'],
-                ]
+        'email' => $userData['email'], // الشرط للبحث
+    ],
+                [
+        'password' => bcrypt('123456dummy'), // البيانات التي سيتم استخدامها في حالة الإنشاء
+    ]
             );
 
             // Generate a JWT token for the user
@@ -231,9 +238,9 @@ class AuthService
             return [
                 'message' => __('auth.google_login_success'),
                 'status' => 200,
-                'authorisation' => [
+                'data' => [
                     'token' => $token, // Return the generated token
-                    'type' => 'bearer', // Token type
+
                 ],
             ];
         } catch (Exception $e) {

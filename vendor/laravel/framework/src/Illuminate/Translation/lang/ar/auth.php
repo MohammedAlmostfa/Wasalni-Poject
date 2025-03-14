@@ -15,7 +15,7 @@
 return [
 
     //authantication
-    'registration_error' => "لا يمكنك التسجيل الآن. يرجى التحقق من حسابك أو المحاولة بعد ساعة.",
+    'registration_error' => "لا يمكنك التسجيل الآن. يرجى التحقق من حسابك او عاد طل ارسال الرمز ة.",
     'verification_code_error' => "لا يمكنك إعادة إرسال الرمز مرة أخرى، يرجى المحاولة بعد ساعة.",
     'verification_success' => "تم إرسال رمز التحقق بنجاح.",
     'registration_general_error' => "حدث خطأ أثناء التسجيل.",
