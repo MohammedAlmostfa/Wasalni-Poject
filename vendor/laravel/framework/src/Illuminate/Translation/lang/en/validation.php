@@ -187,10 +187,7 @@ return [
     */
 
     'attributes' => [
-'country_id' => 'اسم الدولة',
-'trip_id' => ' الرحلة',
-'user_id' => ' المستخدم',
-'booking_id' => ' الحجز',
+
     ],
 
 ];

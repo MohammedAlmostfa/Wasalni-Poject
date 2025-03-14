@@ -63,7 +63,18 @@ Route::middleware('auth:api')->group(function () {
 
     // API resource routes for trips
     // CRUD operations for trips
-    Route::apiResource('trip', TripController::class);
+
+    Route::group(['middleware' => ['role:admin']], function () {
+        Route::apiResource('trip', TripController::class)->names([
+         'index' => 'trip.list',
+         'store' => 'trip.create',
+         'show' => 'trip.details',
+         'update' => 'trip.update',
+         'destroy' => 'trip.delete',
+]);
+
+    });
+
 
     // API resource routes for profile
     // Update user profile

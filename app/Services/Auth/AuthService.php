@@ -3,10 +3,8 @@
 namespace App\Services\Auth;
 
 use Exception;
-use App\Models\City;
 use App\Models\User;
 use App\Models\Country;
-use App\Models\Profile;
 use App\Events\Registered;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
@@ -36,7 +34,7 @@ class AuthService
                 return [
                     'status' => 400,
                     'message' => [
-                        'errorDetails' => ["You can't register now. Please verify your account or try after an hour. failed!"],
+                        'errorDetails' => [__('auth.registration_error')],
                     ],
                 ];
             }
@@ -52,7 +50,7 @@ class AuthService
                 return [
                     'status' => 400,
                     'message' => [
-                        'errorDetails' => ["You can't resend the code again, please try after an hour."],
+                        'errorDetails' => [__('auth.verification_code_error')],
                     ],
                 ];
             }
@@ -67,7 +65,7 @@ class AuthService
 
             // Return success response
             return [
-                'message' => 'Verification code sent successfully',
+                'message' => __('auth.verification_success'),
                 'status' => 201, // HTTP status code for created
                 'data' => [
                     'email' => $data['email'],
@@ -79,7 +77,7 @@ class AuthService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ['An error occurred during registration.'],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }
@@ -103,14 +101,14 @@ class AuthService
                 return [
                     'status' => 401,
                     'message' => [
-                        'errorDetails' => ['Account not found or invalid credentials.'],
+                        'errorDetails' => [__('auth.login_failed')],
                     ],
                 ];
             } else {
                 // If authentication succeeds
                 $user = Auth::user();
                 return [
-                    'message' => 'Login successful',
+                    'message' => __('auth.login_success'),
                     'status' => 201, // HTTP status code for successful creation
                     'data' => [
                         'token' => $token, // Return the generated token
@@ -124,7 +122,7 @@ class AuthService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ['An error occurred during login.'],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }
@@ -143,7 +141,7 @@ class AuthService
             // Logout the user
             Auth::logout();
             return [
-                'message' => 'Logout successful',
+                'message' => __('auth.logout_success'),
                 'status' => 200, // HTTP status code for success
             ];
         } catch (Exception $e) {
@@ -152,7 +150,7 @@ class AuthService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ['An error occurred during logout.'],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }
@@ -170,15 +168,12 @@ class AuthService
         try {
             // Refresh the token for the authenticated user
             return [
-                'message' => 'Token refreshed successfully',
+                'message' => __('auth.token_refresh_success'),
                 'status' => 200, // HTTP status code for success
                 'data' => [
                     'user' => Auth::user(), // Return the authenticated user
-
-                        'token' => Auth::refresh(), // Return the new token
-
-
-                ]
+                    'token' => Auth::refresh(), // Return the new token
+                ],
             ];
         } catch (Exception $e) {
             // Log the error if token refresh fails
@@ -186,7 +181,7 @@ class AuthService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ['An error occurred while refreshing the token.'],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }
@@ -212,7 +207,7 @@ class AuthService
                 return [
                     'status' => $response->status(),
                     'message' => [
-                        'errorDetails' => ['Failed to fetch user info from Google.'],
+                        'errorDetails' => [__('auth.google_auth_failed')],
                     ],
                 ];
             }
@@ -234,7 +229,7 @@ class AuthService
 
             // Return success response
             return [
-                'message' => 'Logged in successfully',
+                'message' => __('auth.google_login_success'),
                 'status' => 200,
                 'authorisation' => [
                     'token' => $token, // Return the generated token
@@ -249,12 +244,18 @@ class AuthService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ['An error occurred while logging in with Google.'],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }
     }
 
+    /**
+     * Verify user account using the verification code.
+     *
+     * @param array $data Contains email and verification code.
+     * @return array Contains message, status, and additional data.
+     */
     public function verficationacount($data)
     {
         try {
@@ -274,7 +275,7 @@ class AuthService
                     return [
                         'status' => 404,
                         'message' => [
-                            'errorDetails' => ['User data not found in cache.'],
+                            'errorDetails' => [__('auth.not_registered_yet')],
                         ],
                     ];
                 }
@@ -295,7 +296,7 @@ class AuthService
                 $countries = Country::select('id', 'country_name')->get();
 
                 return [
-                    'message' => 'Email verified successfully and user registered',
+                    'message' => __('auth.email_verified_and_registered'),
                     'status' => 200,
                     'data' => [
                         'token' => $token, // Return the generated token
@@ -306,7 +307,7 @@ class AuthService
                 return [
                     'status' => 400,
                     'message' => [
-                        'errorDetails' => ['Invalid verification code.'],
+                        'errorDetails' => [__('auth.invalid_verification_code')],
                     ],
                 ];
             }
@@ -317,10 +318,9 @@ class AuthService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ['An error occurred during account verification.'],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }
     }
-
 }

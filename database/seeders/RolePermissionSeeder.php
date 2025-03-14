@@ -11,21 +11,27 @@ class RolePermissionSeeder extends Seeder
 {
     public function run()
     {
-        // Create roles
+        // إنشاء مستخدم
+        $user = User::create([
+    'email' => "mohammedalmostfa36@gmail.com",
+    'password' => bcrypt("P@ssw0rd123") // أو Hash::make("P@ssw0rd123")
+]);
+
+        // إنشاء الأدوار
         $adminRole = Role::create(['name' => 'admin']);
         $userRole = Role::create(['name' => 'user']);
-        $userRole = Role::create(['name' => 'Privetuser']);
+        $privetuserRole = Role::create(['name' => 'Privetuser']);
 
-        // Create permissions
-        $editPermission = Permission::create(['name' => 'edit articles']);
-        $viewPermission = Permission::create(['name' => 'view articles']);
+        // إنشاء الصلاحيات
+        $editPermission = Permission::create(['name' => 'trip.create']);
+        $viewPermission = Permission::create(['name' => 'trip.list']);
+        $updatPermission = Permission::create(['name' => 'trip.update']);
+        $deletPermission = Permission::create(['name' => 'trip.delete']);
 
-        // Assign permissions to roles
-        $adminRole->givePermissionTo($editPermission, $viewPermission);
-        $userRole->givePermissionTo($viewPermission);
+        // تعيين الصلاحيات للأدوار
+        $privetuserRole->givePermissionTo($editPermission, $viewPermission, $updatPermission, $deletPermission);
 
-        // Assign role to user
-        $user = User::find(1); // Example user with ID 1
+        // تعيين دور للمستخدم
         $user->assignRole('admin');
     }
 }

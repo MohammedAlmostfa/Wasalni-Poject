@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TripRequest\FilteringTripsData;
 use App\Models\Trip;
+use App\Services\TripService;
 use App\Services\TraipService;
+use App\Http\Resources\TripResource;
 use App\Http\Requests\TripRequest\StoreTripRequest;
 use App\Http\Requests\TripRequest\UpdateTripRequest;
-use App\Http\Resources\TripResource;
+use App\Http\Requests\TripRequest\FilteringTripsData;
 
 class TripController extends Controller
 {
@@ -23,7 +24,7 @@ class TripController extends Controller
      *
      * @param TraipService $tripService The trip service instance.
      */
-    public function __construct(TraipService $tripService)
+    public function __construct(TripService $tripService)
     {
         $this->tripService = $tripService;
     }
@@ -60,6 +61,8 @@ class TripController extends Controller
      */
     public function store(StoreTripRequest $request)
     {
+        //$this->authorize('create');
+
         // Validate the request data
         $validationData = $request->validated();
 

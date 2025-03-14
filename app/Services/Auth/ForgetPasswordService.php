@@ -32,7 +32,7 @@ class ForgetPasswordService
                 return [
                     'status' => 400,
                     'message' => [
-                        'errorDetails' => ["You can't resend the code again, please try after an hour."],
+                        'errorDetails' => [__('auth.verification_code_error')],
                     ],
                 ];
             }
@@ -47,7 +47,7 @@ class ForgetPasswordService
 
             return [
                 'status' => 200,
-                'message' => "The code has been sent to your email",
+                'message' => __('auth.verification_success'),
             ];
         } catch (Exception $e) {
             // Log the error and return a server error response
@@ -56,7 +56,7 @@ class ForgetPasswordService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ["There is something wrong on the server."],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }
@@ -84,21 +84,21 @@ class ForgetPasswordService
                     return [
                         'status' => 400,
                         'message' => [
-                            'errorDetails' => ["The code you entered is incorrect."],
+                            'errorDetails' => [__('auth.invalid_verification_code')],
                         ],
                     ];
                 }
 
                 return [
                     'status' => 200,
-                    'message' => "The code you entered is correct.",
+                    'message' => __('auth.code_correct'),
                 ];
             } else {
                 // If the code is not found in the cache, it has expired
                 return [
                     'status' => 400,
                     'message' => [
-                        'errorDetails' => ["The code sent to this account has expired."],
+                        'errorDetails' => [__('auth.code_expired')],
                     ],
                 ];
             }
@@ -109,7 +109,7 @@ class ForgetPasswordService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ["There is something wrong on the server."],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }
@@ -139,14 +139,14 @@ class ForgetPasswordService
 
                 return [
                     'status' => 200,
-                    'message' => "Password changed successfully.",
+                    'message' => __('auth.password_changed'),
                 ];
             } else {
                 // If the user is not found, return a 404 response
                 return [
                     'status' => 404,
                     'message' => [
-                        'errorDetails' => ["We didn't find any user with this email."],
+                        'errorDetails' => [__('auth.user_not_found')],
                     ],
                 ];
             }
@@ -157,7 +157,7 @@ class ForgetPasswordService
             return [
                 'status' => 500,
                 'message' => [
-                    'errorDetails' => ["There is something wrong on the server."],
+                    'errorDetails' => [__('auth.general_error')],
                 ],
             ];
         }

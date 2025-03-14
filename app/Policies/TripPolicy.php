@@ -42,8 +42,12 @@ class TripPolicy
      */
     public function create(User $user)
     {
-        // By default, allow all authenticated users to create trips
+        if(!$user->can('trip.create')) {
+            // By default, allow all authenticated users to create trips
+            return Response::deny('You are not allowed to creat  trip.');
+        }
         return true;
+
     }
 
     /**
