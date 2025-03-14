@@ -28,7 +28,7 @@ class StorProfileRequest extends FormRequest
             'first_name' => 'required|string|max:255',
             "gender" => 'nullable',
             'birthday' => 'nullable|date|before:-13 years',
-            'phone' => 'required|regex:/\+963\d{9}/',
+            'phone' => 'required',
             'address' => 'required|regex:/(^[-0-9A-Za-z.,\/ ]+$)/',
             'country_id'=>'required|exists:countries,id',
         ];

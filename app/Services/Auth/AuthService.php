@@ -364,8 +364,8 @@ class AuthService
             // Generate a JWT token for the user
             $token = JWTAuth::fromUser($user);
 
-            // Check if the user was recently created
-            if ($user->wasRecentlyCreated) {
+            // Check if the user has profile
+            if (!$user->profile) {
                 // Fetch all countries for new users
                 $countries = Country::select('id', 'country_name')->get();
 
