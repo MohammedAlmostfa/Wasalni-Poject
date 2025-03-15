@@ -24,8 +24,10 @@ class TripService
     public function showTrips($filteringData)
     {
         try {
-            // Retrieve and filter trips
-            $trips = Trip::filter(Trip::query(), $filteringData)->paginate(10);
+            // Retrieve and filter trips with relationships
+            $trips = Trip::with(['cityFrom', 'cityTo'])
+                ->filterby($filteringData)
+                ->paginate(10);
 
             return [
                 'message' => 'All trips retrieved successfully',
@@ -44,7 +46,6 @@ class TripService
             ];
         }
     }
-
     /**
      * Create a new trip.
      *
@@ -56,7 +57,7 @@ class TripService
      *               - 'data': The created trip.
      *               - 'status': The HTTP status code (200 for success, 500 for error).
      */
-    public function createTrip($data)
+    public function creattrip($data)
     {
         try {
             // Create a new trip
@@ -108,7 +109,7 @@ class TripService
      *               - 'data': The updated trip data or null if an error occurred.
      *               - 'status': The HTTP status code (200 for success, 500 for error).
      */
-    public function updateTrip($data, Trip $trip)
+    public function updatetrip($data, Trip $trip)
     {
         try {
             // Update the trip with the provided data
@@ -121,6 +122,10 @@ class TripService
                 'seat_price' => $data['seat_price'] ?? $trip->seat_price,
                 'available_seats' => $data['available_seats'] ?? $trip->available_seats,
             ]);
+            $fromCity = City::find($trip->from);
+            $toCity = City::find($trip->to);
+            $trip->from = $fromCity->city_name;
+            $trip->to = $toCity->city_name;
 
             return [
                 'message' => 'Trip updated successfully',
@@ -152,7 +157,7 @@ class TripService
      *               - 'message': A message describing the outcome.
      *               - 'status': The HTTP status code (200 for success, 500 for error).
      */
-    public function deleteTrip(Trip $trip)
+    public function delettrip(Trip $trip)
     {
         try {
             // Delete the trip

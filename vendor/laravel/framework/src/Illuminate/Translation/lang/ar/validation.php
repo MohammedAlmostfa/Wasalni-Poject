@@ -3,57 +3,55 @@
 return [
 
     /*
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
     | Validation Language Lines
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
     |
-    | The following language lines contain the default error messages used by
-    | the validator class. Some of these rules have multiple versions such
-    | as the size rules. Feel free to tweak each of these messages here.
+    | الرسائل التي سيتم عرضها للمستخدم عند حدوث خطأ في المدخلات.
     |
     */
 
     'accepted' => 'يجب قبول :attribute.',
     'accepted_if' => 'يجب قبول :attribute عندما يكون :other يساوي :value.',
-    'active_url' => ':attribute يجب أن يكون رابطًا صالحًا.',
-    'after' => ':attribute يجب أن يكون تاريخًا بعد :date.',
-    'after_or_equal' => ':attribute يجب أن يكون تاريخًا بعد أو يساوي :date.',
+    'active_url' => ':attribute غير رابط صحيح.',
+    'after' => ':attribute يجب أن يكون بعد :date.',
+    'after_or_equal' => ':attribute يجب أن يكون بعد أو يساوي :date.',
     'alpha' => ':attribute يجب أن يحتوي على أحرف فقط.',
-    'alpha_dash' => ':attribute يجب أن يحتوي على أحرف وأرقام وشرطات فقط.',
+    'alpha_dash' => ':attribute يجب أن يحتوي على أحرف، أرقام، وشرطات فقط.',
     'alpha_num' => ':attribute يجب أن يحتوي على أحرف وأرقام فقط.',
     'array' => ':attribute يجب أن يكون مصفوفة.',
-    'ascii' => ':attribute يجب أن يحتوي على أحرف وأرقام ورموز أحادية البايت فقط.',
-    'before' => ':attribute يجب أن يكون تاريخًا قبل :date.',
-    'before_or_equal' => ':attribute يجب أن يكون تاريخًا قبل أو يساوي :date.',
+    'ascii' => ':attribute يجب أن يحتوي على أحرف ورموز أحادية البايت فقط.',
+    'before' => ':attribute يجب أن يكون قبل :date.',
+    'before_or_equal' => ':attribute يجب أن يكون قبل أو يساوي :date.',
     'between' => [
-        'array' => ':attribute يجب أن يحتوي على عدد عناصر بين :min و :max.',
+        'array' => ':attribute يجب أن يحتوي على بين :min و :max عناصر.',
         'file' => ':attribute يجب أن يكون حجمه بين :min و :max كيلوبايت.',
         'numeric' => ':attribute يجب أن يكون بين :min و :max.',
-        'string' => ':attribute يجب أن يكون طوله بين :min و :max أحرف.',
+        'string' => ':attribute يجب أن يكون بين :min و :max أحرف.',
     ],
-    'boolean' => ':attribute يجب أن يكون صحيحًا أو خاطئًا.',
-    'can' => ':attribute يحتوي على قيمة غير مصرح بها.',
-    'confirmed' => ':attribute التأكيد غير متطابق.',
+    'boolean' => ':attribute يجب أن يكون صح أو خطأ.',
+    'can' => ':attribute يحتوي على قيمة غير مسموح بها.',
+    'confirmed' => 'التأكيد لـ :attribute غير متطابق.',
     'current_password' => 'كلمة المرور غير صحيحة.',
-    'date' => ':attribute يجب أن يكون تاريخًا صالحًا.',
-    'date_equals' => ':attribute يجب أن يكون تاريخًا يساوي :date.',
+    'date' => ':attribute يجب أن يكون تاريخ صالح.',
+    'date_equals' => ':attribute يجب أن يكون نفس تاريخ :date.',
     'date_format' => ':attribute يجب أن يتطابق مع الصيغة :format.',
     'decimal' => ':attribute يجب أن يحتوي على :decimal منازل عشرية.',
-    'declined' => ':attribute يجب أن يتم رفضه.',
-    'declined_if' => ':attribute يجب أن يتم رفضه عندما يكون :other يساوي :value.',
+    'declined' => ':attribute يجب رفضه.',
+    'declined_if' => ':attribute يجب رفضه عندما يكون :other يساوي :value.',
     'different' => ':attribute و :other يجب أن يكونا مختلفين.',
-    'digits' => ':attribute يجب أن يكون :digits أرقامًا.',
-    'digits_between' => ':attribute يجب أن يكون بين :min و :max أرقامًا.',
-    'dimensions' => ':attribute يحتوي على أبعاد صورة غير صالحة.',
+    'digits' => ':attribute يجب أن يحتوي على :digits أرقام.',
+    'digits_between' => ':attribute يجب أن يكون بين :min و :max أرقام.',
+    'dimensions' => ':attribute يحتوي على أبعاد صورة غير صحيحة.',
     'distinct' => ':attribute يحتوي على قيمة مكررة.',
     'doesnt_end_with' => ':attribute يجب ألا ينتهي بأحد القيم التالية: :values.',
     'doesnt_start_with' => ':attribute يجب ألا يبدأ بأحد القيم التالية: :values.',
-    'email' => ':attribute يجب أن يكون عنوان بريد إلكتروني صالحًا.',
+    'email' => 'البريد الإلكتروني غير صحيح.',
     'ends_with' => ':attribute يجب أن ينتهي بأحد القيم التالية: :values.',
     'enum' => 'القيمة المحددة لـ :attribute غير صالحة.',
-    'exists' => 'القيمة المحددة لـ :attribute غير صالحة.',
+    'exists' => 'القيمة المحددة لـ :attribute غير صحيحة.',
     'extensions' => ':attribute يجب أن يحتوي على أحد الامتدادات التالية: :values.',
-    'file' => ':attribute يجب أن يكون ملفًا.',
+    'file' => ':attribute يجب أن يكون ملف.',
     'filled' => ':attribute يجب أن يحتوي على قيمة.',
     'gt' => [
         'array' => ':attribute يجب أن يحتوي على أكثر من :value عناصر.',
@@ -67,15 +65,15 @@ return [
         'numeric' => ':attribute يجب أن يكون أكبر من أو يساوي :value.',
         'string' => ':attribute يجب أن يكون أطول من أو يساوي :value أحرف.',
     ],
-    'hex_color' => ':attribute يجب أن يكون لونًا سداسيًا صالحًا.',
+    'hex_color' => ':attribute يجب أن يكون لون سداسي صحيح.',
     'image' => ':attribute يجب أن يكون صورة.',
-    'in' => 'القيمة المحددة لـ :attribute غير صالحة.',
-    'in_array' => ':attribute يجب أن يكون موجودًا في :other.',
-    'integer' => ':attribute يجب أن يكون عددًا صحيحًا.',
-    'ip' => ':attribute يجب أن يكون عنوان IP صالحًا.',
-    'ipv4' => ':attribute يجب أن يكون عنوان IPv4 صالحًا.',
-    'ipv6' => ':attribute يجب أن يكون عنوان IPv6 صالحًا.',
-    'json' => ':attribute يجب أن يكون نصًا JSON صالحًا.',
+    'in' => 'القيمة المحددة لـ :attribute غير صحيحة.',
+    'in_array' => ':attribute يجب أن يكون موجود في :other.',
+    'integer' => ':attribute يجب أن يكون عدد صحيح.',
+    'ip' => ':attribute يجب أن يكون عنوان IP صالح.',
+    'ipv4' => ':attribute يجب أن يكون عنوان IPv4 صالح.',
+    'ipv6' => ':attribute يجب أن يكون عنوان IPv6 صالح.',
+    'json' => ':attribute يجب أن يكون نص JSON صالح.',
     'lowercase' => ':attribute يجب أن يكون بأحرف صغيرة.',
     'lt' => [
         'array' => ':attribute يجب أن يحتوي على أقل من :value عناصر.',
@@ -89,51 +87,51 @@ return [
         'numeric' => ':attribute يجب أن يكون أصغر من أو يساوي :value.',
         'string' => ':attribute يجب أن يكون أقصر من أو يساوي :value أحرف.',
     ],
-    'mac_address' => ':attribute يجب أن يكون عنوان MAC صالحًا.',
+    'mac_address' => ':attribute يجب أن يكون عنوان MAC صالح.',
     'max' => [
         'array' => ':attribute يجب ألا يحتوي على أكثر من :max عناصر.',
-        'file' => ':attribute يجب ألا يكون أكبر من :max كيلوبايت.',
-        'numeric' => ':attribute يجب ألا يكون أكبر من :max.',
-        'string' => ':attribute يجب ألا يكون أطول من :max أحرف.',
+        'file' => ':attribute يجب ألا يتجاوز :max كيلوبايت.',
+        'numeric' => ':attribute يجب ألا يتجاوز :max.',
+        'string' => ':attribute يجب ألا يتجاوز :max أحرف.',
     ],
-    'max_digits' => ':attribute يجب ألا يحتوي على أكثر من :max أرقامًا.',
-    'mimes' => ':attribute يجب أن يكون ملفًا من نوع: :values.',
-    'mimetypes' => ':attribute يجب أن يكون ملفًا من نوع: :values.',
+    'max_digits' => ':attribute يجب ألا يحتوي على أكثر من :max أرقام.',
+    'mimes' => ':attribute يجب أن يكون من نوع: :values.',
+    'mimetypes' => ':attribute يجب أن يكون من نوع: :values.',
     'min' => [
         'array' => ':attribute يجب أن يحتوي على الأقل :min عناصر.',
         'file' => ':attribute يجب أن يكون على الأقل :min كيلوبايت.',
         'numeric' => ':attribute يجب أن يكون على الأقل :min.',
         'string' => ':attribute يجب أن يكون على الأقل :min أحرف.',
     ],
-    'min_digits' => ':attribute يجب أن يحتوي على الأقل :min أرقامًا.',
+    'min_digits' => ':attribute يجب أن يحتوي على الأقل :min أرقام.',
     'missing' => ':attribute يجب أن يكون غير موجود.',
     'missing_if' => ':attribute يجب أن يكون غير موجود عندما يكون :other يساوي :value.',
     'missing_unless' => ':attribute يجب أن يكون غير موجود إلا إذا كان :other يساوي :value.',
     'missing_with' => ':attribute يجب أن يكون غير موجود عندما تكون :values موجودة.',
     'missing_with_all' => ':attribute يجب أن يكون غير موجود عندما تكون جميع :values موجودة.',
-    'multiple_of' => ':attribute يجب أن يكون مضاعفًا لـ :value.',
-    'not_in' => 'القيمة المحددة لـ :attribute غير صالحة.',
-    'not_regex' => 'صيغة :attribute غير صالحة.',
-    'numeric' => ':attribute يجب أن يكون رقمًا.',
+    'multiple_of' => ':attribute يجب أن يكون مضاعف لـ :value.',
+    'not_in' => 'القيمة المحددة لـ :attribute غير صحيحة.',
+    'not_regex' => 'صيغة :attribute غير صحيحة.',
+    'numeric' => ':attribute يجب أن يكون رقم.',
     'password' => [
         'letters' => ':attribute يجب أن يحتوي على حرف واحد على الأقل.',
-        'mixed' => ':attribute يجب أن يحتوي على حرف كبير وحرف صغير على الأقل.',
+        'mixed' => ':attribute يجب أن يحتوي على حرف كبير وصغير على الأقل.',
         'numbers' => ':attribute يجب أن يحتوي على رقم واحد على الأقل.',
         'symbols' => ':attribute يجب أن يحتوي على رمز واحد على الأقل.',
-        'uncompromised' => ':attribute ظهر في تسريب بيانات. الرجاء اختيار قيمة أخرى.',
+        'uncompromised' => ':attribute تم تسريبه في اختراق بيانات. اختر قيمة أخرى.',
     ],
-    'present' => ':attribute يجب أن يكون موجودًا.',
-    'present_if' => ':attribute يجب أن يكون موجودًا عندما يكون :other يساوي :value.',
-    'present_unless' => ':attribute يجب أن يكون موجودًا إلا إذا كان :other يساوي :value.',
-    'present_with' => ':attribute يجب أن يكون موجودًا عندما تكون :values موجودة.',
-    'present_with_all' => ':attribute يجب أن يكون موجودًا عندما تكون جميع :values موجودة.',
+    'present' => ':attribute يجب أن يكون موجود.',
+    'present_if' => ':attribute يجب أن يكون موجود عندما يكون :other يساوي :value.',
+    'present_unless' => ':attribute يجب أن يكون موجود إلا إذا كان :other يساوي :value.',
+    'present_with' => ':attribute يجب أن يكون موجود عندما تكون :values موجودة.',
+    'present_with_all' => ':attribute يجب أن يكون موجود عندما تكون جميع :values موجودة.',
     'prohibited' => ':attribute ممنوع.',
     'prohibited_if' => ':attribute ممنوع عندما يكون :other يساوي :value.',
-    'prohibited_unless' => ':attribute ممنوع إلا إذا كان :other موجودًا في :values.',
+    'prohibited_unless' => ':attribute ممنوع إلا إذا كان :other موجود في :values.',
     'prohibits' => ':attribute يمنع وجود :other.',
-    'regex' => 'صيغة :attribute غير صالحة.',
+    'regex' => 'صيغة :attribute غير صحيحة.',
     'required' => ':attribute مطلوب.',
-    'required_array_keys' => ':attribute يجب أن يحتوي على قيم لـ: :values.',
+    'required_array_keys' => ':attribute يجب أن يحتوي على قيم لـ :values.',
     'required_if' => ':attribute مطلوب عندما يكون :other يساوي :value.',
     'required_if_accepted' => ':attribute مطلوب عندما يتم قبول :other.',
     'required_unless' => ':attribute مطلوب إلا إذا كان :other موجودًا في :values.',
@@ -149,23 +147,21 @@ return [
         'string' => ':attribute يجب أن يكون :size أحرف.',
     ],
     'starts_with' => ':attribute يجب أن يبدأ بأحد القيم التالية: :values.',
-    'string' => ':attribute يجب أن يكون نصًا.',
-    'timezone' => ':attribute يجب أن يكون منطقة زمنية صالحة.',
-    'unique' => ':attribute تم استخدامه مسبقًا.',
+    'string' => ':attribute يجب أن يكون نص.',
+    'timezone' => ':attribute يجب أن يكون منطقة زمنية صحيحة.',
+    'unique' => ':attribute تم استخدامه من قبل.',
     'uploaded' => ':attribute فشل في التحميل.',
     'uppercase' => ':attribute يجب أن يكون بأحرف كبيرة.',
-    'url' => ':attribute يجب أن يكون رابطًا صالحًا.',
-    'ulid' => ':attribute يجب أن يكون ULID صالحًا.',
-    'uuid' => ':attribute يجب أن يكون UUID صالحًا.',
+    'url' => ':attribute يجب أن يكون رابط صالح.',
+    'ulid' => ':attribute يجب أن يكون ULID صحيح.',
+    'uuid' => ':attribute يجب أن يكون UUID صحيح.',
 
     /*
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
     | Custom Validation Language Lines
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
     |
-    | Here you may specify custom validation messages for attributes using the
-    | convention "attribute.rule" to name the lines. This makes it quick to
-    | specify a specific custom language line for a given attribute rule.
+    | يمكنك تخصيص الرسائل للسمات باستخدام الاسم "attribute.rule".
     |
     */
 
@@ -176,13 +172,11 @@ return [
     ],
 
     /*
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
     | Custom Validation Attributes
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
     |
-    | The following language lines are used to swap our attribute placeholder
-    | with something more reader friendly such as "E-Mail Address" instead
-    | of "email". This simply helps us make our message more expressive.
+    | هذه السطور تستخدم لتبديل اسم السمة بقيمة أكثر وضوحًا للمستخدم.
     |
     */
 
@@ -195,25 +189,25 @@ return [
         'birthday' => 'تاريخ الميلاد',
         'phone' => 'رقم الهاتف',
         'address' => 'العنوان',
-        'country_id' => 'اسم الدولة',
-        'city_name' => 'اسم المدينة',
+        'country_id' => 'الدولة',
+        'city_name' => 'المدينة',
         'country_name' => 'اسم الدولة',
-        'trip_id' => ' الرحلة',
+        'trip_id' => 'الرحلة',
         'status' => 'الحالة',
         'seats_number' => 'عدد المقاعد',
-        'user_id' => ' المستخدم',
-        'favorite_user_id' => 'معرف المستخدم المفضل',
-        'booking_id' => ' الحجز',
+        'user_id' => 'المستخدم',
+        'favorite_user_id' => 'المستخدم المفضل',
+        'booking_id' => 'الحجز',
         'rate' => 'التقييم',
         'review' => 'المراجعة',
         'description' => 'الوصف',
         'trip_start' => 'بداية الرحلة',
-        'from' => 'المدينة المنطلقة منها',
-        'to' => 'المدينة المنطلقة إليها',
+        'from' => 'من',
+        'to' => 'إلى',
         'seat_price' => 'سعر المقعد',
         'available_seats' => 'المقاعد المتاحة',
         'code' => 'رمز التحقق',
-        'googleToken'=>"رمز الوصول من  غوغل"
+        'googleToken' => 'رمز الوصول من غوغل'
     ],
 
 ];

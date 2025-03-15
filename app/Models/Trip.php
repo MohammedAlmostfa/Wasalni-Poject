@@ -47,25 +47,25 @@ class Trip extends Model
     }
 
 
-    public function scopeFilter($model, $filteringData)
+    public function scopeFilterby($model, $filteringData)
     {
-        if (isset($filteringData->trip_start)) {
-            $model->where('trip_start', '>', $filteringData->trip_start);
+        if (isset($filteringData['trip_start'])) {
+            $model->where('trip_start', '>', $filteringData['trip_start']);
         }
-        if (isset($filteringData->from)) {
-            $model->where('from', $filteringData->from);
+        if (isset($filteringData['from'])) {
+            $model->where('from', $filteringData['from']);
         }
-        if (isset($filteringData->to)) {
-            $model->where('to', $filteringData->to);
+        if (isset($filteringData['to'])) {
+            $model->where('to', $filteringData['to']);
         }
-        if (isset($filteringData->status)) {
-            $model->where('status', $filteringData->status);
+        if (isset($filteringData['status'])) {
+            $model->where('status', $filteringData['status']);
         }
-        if (isset($filteringData->seat_price)) {
-            $model->where('seat_price', '<=', $filteringData->seat_price);
+        if (isset($filteringData['seat_price'])) {
+            $model->where('seat_price', '<=', $filteringData['seat_price']);
         }
-        if (isset($filteringData->available_seats)) {
-            $model->where('available_seats', '>=', $filteringData->available_seats);
+        if (isset($filteringData['available_seats'])) {
+            $model->where('available_seats', '>=', $filteringData['available_seats']);
         }
 
         return $model;

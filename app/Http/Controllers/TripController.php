@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Trip;
 use App\Services\TripService;
-use App\Services\TraipService;
 use App\Http\Resources\TripResource;
 use App\Http\Requests\TripRequest\StoreTripRequest;
 use App\Http\Requests\TripRequest\UpdateTripRequest;
@@ -15,14 +14,14 @@ class TripController extends Controller
     /**
      * The trip service instance.
      *
-     * @var TraipService
+     * @var TripService
      */
     protected $tripService;
 
     /**
      * Create a new TripController instance.
      *
-     * @param TraipService $tripService The trip service instance.
+     * @param TripService $tripService The trip service instance.
      */
     public function __construct(TripService $tripService)
     {
@@ -43,12 +42,12 @@ class TripController extends Controller
         $validationData = $request->validated();
 
         // Call the trip service to retrieve all trips
-        $result = $this->tripService->showtrips($validationData);
+        $result = $this->tripService->showTrips($validationData);
 
         // Return a paginated response if the status is 200, otherwise return an error response
         return $result['status'] === 200
-            ? $this->paginated($result['data'], TripResource::class, $result['message'], $result['status'])
-            : self::error(null, $result['message'], $result['status']);
+           ? $this->success($result['data'], $result['message'], $result['status'])
+           : $this->error(null, $result['message'], $result['status']);
     }
 
     /**
@@ -71,8 +70,8 @@ class TripController extends Controller
 
         // Return a success or error response based on the result
         return $result['status'] === 200
-            ? self::success($result['data'], $result['message'], $result['status'])
-            : self::error(null, $result['message'], $result['status']);
+            ? $this->success($result['data'], $result['message'], $result['status'])
+            : $this->error(null, $result['message'], $result['status']);
     }
 
     /**
@@ -93,12 +92,12 @@ class TripController extends Controller
         $validationData = $request->validated();
 
         // Call the trip service to update the trip
-        $result = $this->tripService->updatetrip($validationData, $trip);
+        $result = $this->tripService->updateTrip($validationData, $trip);
 
         // Return a success or error response based on the result
         return $result['status'] === 200
-            ? self::success($result['data'], $result['message'], $result['status'])
-            : self::error(null, $result['message'], $result['status']);
+            ? $this->success($result['data'], $result['message'], $result['status'])
+            : $this->error(null, $result['message'], $result['status']);
     }
 
     /**
@@ -119,12 +118,27 @@ class TripController extends Controller
 
         // Return a success or error response based on the result
         return $result['status'] === 200
-            ? self::success(null, $result['message'], $result['status'])
-            : self::error(null, $result['message'], $result['status']);
+            ? $this->success(null, $result['message'], $result['status'])
+            : $this->error(null, $result['message'], $result['status']);
     }
 
-    public function endingTrip()
+    /**
+     * End a trip.
+     *
+     * This method marks a trip as ended.
+     *
+     * @param Trip $trip The trip to be ended.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function endingTrip(Trip $trip)
     {
+        // Call the trip service to end the trip
+        $result = $this->tripService->endingTrip($trip);
 
+        // Return a success or error response based on the result
+        return $result['status'] === 200
+            ? $this->success(null, $result['message'], $result['status'])
+            : $this->error(null, $result['message'], $result['status']);
     }
+
 }
