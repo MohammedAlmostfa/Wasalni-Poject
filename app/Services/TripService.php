@@ -25,7 +25,7 @@ class TripService
     {
         try {
             // Retrieve trips with necessary relationships and apply filters
-            $trips = Trip::select('trips.id', 'trips.description', 'trips.status', 'trips.from', 'trips.to', 'trips.user_id')
+            $trips = Trip::select('trips.id', 'trips.description', 'trips.status', 'trips.from', 'trips.to', 'trips.user_id', 'trips.created_at')
                 ->join('profiles', 'trips.user_id', '=', 'profiles.user_id')
                 ->join('cities AS city_from', 'trips.from', '=', 'city_from.id')
                 ->join('cities AS city_to', 'trips.to', '=', 'city_to.id')

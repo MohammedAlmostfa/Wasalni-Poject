@@ -22,6 +22,7 @@ class TripResource extends JsonResource
             'name' => $this->first_name ." ". $this->last_name ,
             'from_city' => $this->from_city,
             'to_city' => $this->to_city,
+              'created_at' => $this->created_at,
         ];
     }
 }
