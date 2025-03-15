@@ -43,11 +43,12 @@ Route::post('refresh', [AuthController::class, 'refresh']); // Refreshes the JWT
 
 // Email verification routes
 Route::post('/verify-email', [AuthController::class, 'verify']); // Verifies user's email
-Route::post('/resendCode', [AuthController::class, 'resendCode']); // Resends the verification code
+Route::middleware('throttle:1,20')->post('/resendCode', [AuthController::class, 'resendCode']); // Resends the verification code
 
 // Change password routes
 Route::post('/changePassword', [ForgetPasswordController::class, 'changePassword']); // Handles password change
-Route::post('/checkEmail', [ForgetPasswordController::class, 'checkEmail']); // Checks if an email is registered
+Route::middleware('throttle:1,20')->post('/checkEmail', [ForgetPasswordController::class, 'checkEmail']);
+
 Route::post('/checkCode', [ForgetPasswordController::class, 'checkCode']); // Verifies a password reset code
 
 // Protected routes (require authentication)

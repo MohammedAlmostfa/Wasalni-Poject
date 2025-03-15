@@ -26,6 +26,7 @@ class ForgetPasswordService
         try {
             // Create a unique cache key for the user's email
             $key = $email;
+            Cache::delete($key);
 
             // Check if a code has already been sent within the last hour
             if (Cache::has($key)) {
