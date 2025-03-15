@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             User::create([
 
                 'email' => $faker->unique()->email(),
-                'password' => bcrypt('password'),
+                'password' => bcrypt('P@ssw0rd123'),
             ]);
         }
     }

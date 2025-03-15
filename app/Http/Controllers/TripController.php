@@ -46,8 +46,8 @@ class TripController extends Controller
 
         // Return a paginated response if the status is 200, otherwise return an error response
         return $result['status'] === 200
-           ? $this->success($result['data'], $result['message'], $result['status'])
-           : $this->error(null, $result['message'], $result['status']);
+           ? $this->paginated($result['data'], TripResource::class, $result['message'], $result['status'])
+           : self::error(null, $result['message'], $result['status']);
     }
 
     /**
@@ -60,7 +60,8 @@ class TripController extends Controller
      */
     public function store(StoreTripRequest $request)
     {
-        //$this->authorize('create');
+        // Authorize the user to create a trip (if needed)
+        // $this->authorize('create');
 
         // Validate the request data
         $validationData = $request->validated();
@@ -140,5 +141,4 @@ class TripController extends Controller
             ? $this->success(null, $result['message'], $result['status'])
             : $this->error(null, $result['message'], $result['status']);
     }
-
 }

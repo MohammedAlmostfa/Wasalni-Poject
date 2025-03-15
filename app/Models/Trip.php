@@ -20,7 +20,6 @@ class Trip extends Model
         'user_id',
     ];
 
-
     /**
      * Define a relationship with the City model for the "from" city.
      *
@@ -41,12 +40,34 @@ class Trip extends Model
         return $this->belongsTo(City::class, 'to');
     }
 
+    /**
+     * Define a relationship with the User model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Define a relationship with the Booking model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function booking()
     {
         return $this->hasMany(Booking::class);
     }
 
 
+    /**
+     * Define a scope to filter trips.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $model
+     * @param array $filteringData
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeFilterby($model, $filteringData)
     {
         if (isset($filteringData['trip_start'])) {

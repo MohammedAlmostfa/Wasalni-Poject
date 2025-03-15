@@ -10,25 +10,18 @@ class TripResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * This method converts the Trip model into an array that can be returned as JSON.
-     *
-     * @param Request $request The incoming HTTP request.
-     * @return array<string, mixed> The transformed data.
+     * @param Request $request
+     * @return array<string, mixed>
      */
     public function toArray($request)
     {
         return [
             'id' => $this->id,
             'description' => $this->description,
-            'trip_start' => $this->trip_start,
-            'from' => $this->fromCity->city_name,
-            'to' => $this->toCity->city_name,
             'status' => $this->status,
-            'seat_price' => $this->seat_price,
-            'available_seats' => $this->available_seats,
-            'user_id' => $this->user_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'name' => $this->first_name ." ". $this->last_name ,
+            'from_city' => $this->from_city,
+            'to_city' => $this->to_city,
         ];
     }
 }

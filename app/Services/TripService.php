@@ -24,8 +24,12 @@ class TripService
     public function showTrips($filteringData)
     {
         try {
-            // Retrieve and filter trips with relationships
-            $trips = Trip::with(['cityFrom', 'cityTo'])
+            // Retrieve trips with necessary relationships and apply filters
+            $trips = Trip::select('trips.id', 'trips.description', 'trips.status', 'trips.from', 'trips.to', 'trips.user_id')
+                ->join('profiles', 'trips.user_id', '=', 'profiles.user_id')
+                ->join('cities AS city_from', 'trips.from', '=', 'city_from.id')
+                ->join('cities AS city_to', 'trips.to', '=', 'city_to.id')
+                ->addSelect('profiles.first_name', 'profiles.last_name', 'city_from.city_name AS from_city', 'city_to.city_name AS to_city')
                 ->filterby($filteringData)
                 ->paginate(10);
 
@@ -46,6 +50,7 @@ class TripService
             ];
         }
     }
+
     /**
      * Create a new trip.
      *
@@ -122,6 +127,8 @@ class TripService
                 'seat_price' => $data['seat_price'] ?? $trip->seat_price,
                 'available_seats' => $data['available_seats'] ?? $trip->available_seats,
             ]);
+
+            // Retrieve city names for 'from' and 'to' fields
             $fromCity = City::find($trip->from);
             $toCity = City::find($trip->to);
             $trip->from = $fromCity->city_name;
